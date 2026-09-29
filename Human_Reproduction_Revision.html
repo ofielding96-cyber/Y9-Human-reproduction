@@ -1,0 +1,835 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Human Reproduction Revision</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Noto+Sans+Thai:wght@400;600&display=swap">
+<style>
+/* Layout: sticky control bar (languages, progress, topics, activities) over one working column, max ~760px.
+   Palette: ink navy text, deep teal accent, plum for Thai and amber for Spanish so the two translations are told apart at a glance. */
+:root {
+  --bg:#F2F6F7; --surface:#FFFFFF; --ink:#14263A; --muted:#4D6276; --line:#D3DDE3;
+  --accent:#0C7580; --accent-ink:#FFFFFF; --accent-soft:#DDF0F2;
+  --th:#8A2F72; --es:#A4560F;
+  --good:#1B7A4B; --good-bg:#E0F3E8; --bad:#B0302D; --bad-bg:#FBE5E3;
+  --font-body:'Atkinson Hyperlegible','Noto Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Bricolage Grotesque','Atkinson Hyperlegible','Noto Sans Thai',system-ui,sans-serif;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg:#0E1A25; --surface:#162634; --ink:#E7EFF4; --muted:#9DB1C2; --line:#2B3E4E;
+  --accent:#4CC2CC; --accent-ink:#06222A; --accent-soft:#15414B;
+  --th:#E58CC8; --es:#F2AB6B;
+  --good:#5AD09A; --good-bg:#12392A; --bad:#F28A8C; --bad-bg:#43202A; color-scheme:dark; } }
+:root[data-theme="dark"] {
+  --bg:#0E1A25; --surface:#162634; --ink:#E7EFF4; --muted:#9DB1C2; --line:#2B3E4E;
+  --accent:#4CC2CC; --accent-ink:#06222A; --accent-soft:#15414B;
+  --th:#E58CC8; --es:#F2AB6B;
+  --good:#5AD09A; --good-bg:#12392A; --bad:#F28A8C; --bad-bg:#43202A; color-scheme:dark; }
+
+* { box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:17px; line-height:1.5; padding-inline:16px; padding-block:0 48px; }
+button { font:inherit; color:inherit; cursor:pointer; }
+button:focus-visible, textarea:focus-visible, input:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+h1,h2,h3 { font-family:var(--font-display); text-wrap:balance; margin:0; line-height:1.2; }
+.wrap { max-width:760px; margin-inline:auto; }
+
+/* control bar */
+.bar { position:static; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); padding-block:14px 10px; border-bottom:1px solid var(--line); margin-inline:-16px; padding-inline:16px; }
+.bar-in { max-width:760px; margin-inline:auto; display:grid; gap:10px; }
+.top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px; }
+.top h1 { font-size:1.35rem; }
+.top small { color:var(--muted); font-size:.85rem; display:block; }
+.langs { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.langs span.lbl { font-size:.8rem; color:var(--muted); margin-right:2px; }
+.pill { border:1.5px solid var(--line); background:var(--surface); border-radius:999px; padding:5px 14px; min-height:36px; font-size:.9rem; }
+.pill[aria-pressed="true"] { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:700; }
+.progress { display:flex; flex-wrap:wrap; gap:4px 16px; font-size:.82rem; color:var(--muted); font-variant-numeric:tabular-nums; }
+.progress b { color:var(--ink); }
+.chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin; }
+.chip { flex:0 0 auto; min-width:40px; height:40px; border-radius:8px; border:1.5px solid var(--line); background:var(--surface); font-weight:700; font-variant-numeric:tabular-nums; }
+.chip.all { padding-inline:14px; }
+.chip[aria-pressed="true"] { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.tabs { display:flex; gap:4px; overflow-x:auto; }
+.tab { flex:1 0 auto; border:none; background:transparent; padding:8px 12px; border-bottom:3px solid transparent; font-weight:700; color:var(--muted); white-space:nowrap; }
+.tab[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--accent); }
+
+@media (min-width:700px) and (min-height:720px) { .bar { position:sticky; } }
+main { padding-block:20px; }
+.lessonhead { margin-bottom:16px; }
+.lessonhead .k { font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.lessonhead h2 { font-size:1.4rem; }
+
+/* translations shown under the English */
+.tx { display:block; }
+.tx .en { display:block; }
+.tr { font-weight:400; display:block; margin-top:4px; padding-left:10px; border-left:3px solid var(--line); font-size:.86em; line-height:1.45; }
+.tr i { font-style:normal; font-size:.72em; font-weight:700; letter-spacing:.06em; margin-right:6px; padding:1px 5px; border-radius:4px; border:1px solid currentColor; vertical-align:.1em; }
+.tr.th { color:var(--th); border-left-color:var(--th); font-family:'Noto Sans Thai','Atkinson Hyperlegible',system-ui,sans-serif; }
+.tr.es { color:var(--es); border-left-color:var(--es); }
+.term .en { font-family:var(--font-display); font-size:1.7rem; font-weight:700; line-height:1.15; }
+.term .tr { font-size:1.05rem; }
+
+/* generic surfaces */
+.panel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px; }
+.stack { display:grid; gap:16px; }
+.row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.btn { border:1.5px solid var(--line); background:var(--surface); border-radius:8px; padding:9px 16px; min-height:44px; font-weight:700; }
+.btn.primary { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+.btn.good { background:var(--good-bg); color:var(--good); border-color:var(--good); }
+.btn.bad { background:var(--bad-bg); color:var(--bad); border-color:var(--bad); }
+.btn[disabled] { opacity:.45; cursor:default; }
+.meta { font-size:.85rem; color:var(--muted); display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; font-variant-numeric:tabular-nums; }
+.bartrack { height:6px; background:var(--line); border-radius:3px; overflow:hidden; }
+.bartrack > div { height:100%; background:var(--accent); }
+.empty { text-align:center; color:var(--muted); padding:28px 12px; }
+
+/* flashcard */
+.flash { display:block; width:100%; text-align:left; min-height:250px; padding:24px; border-radius:14px; border:1.5px solid var(--line); background:var(--surface); box-shadow:0 1px 0 var(--line); }
+.flash .side { font-size:.75rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; display:block; }
+.flash.back { background:var(--accent-soft); border-color:var(--accent); }
+.flash .def .en { font-size:1.2rem; }
+.flash .def .tr { font-size:1rem; }
+.hint { font-size:.85rem; color:var(--muted); text-align:center; }
+
+/* quiz */
+.q { font-size:1.2rem; font-weight:700; }
+.opts { display:grid; gap:10px; margin-top:14px; }
+.opt { text-align:left; width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:10px; padding:12px 14px; min-height:52px; }
+.opt:hover:not([disabled]) { border-color:var(--accent); }
+.opt.right { background:var(--good-bg); border-color:var(--good); }
+.opt.wrong { background:var(--bad-bg); border-color:var(--bad); }
+.opt[disabled] { cursor:default; }
+.opt .tr { font-size:.82em; }
+.expl { margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--accent-soft); }
+.expl b { display:block; margin-bottom:4px; }
+.score { font-family:var(--font-display); font-size:2.6rem; font-weight:700; font-variant-numeric:tabular-nums; }
+
+/* order + match */
+.acthead { display:flex; justify-content:space-between; gap:10px; align-items:baseline; flex-wrap:wrap; }
+.acthead h3 { font-size:1.1rem; }
+.done-tag { font-size:.8rem; font-weight:700; color:var(--good); background:var(--good-bg); border-radius:999px; padding:2px 10px; }
+.cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+@media (max-width:560px) { .cols { grid-template-columns:1fr; } }
+.cols h4 { margin:0 0 8px; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+.list { display:grid; gap:8px; align-content:start; min-width:0; }
+.item { text-align:left; width:100%; border:1.5px solid var(--line); background:var(--surface); border-radius:9px; padding:10px 12px; min-height:46px; min-width:0; overflow-wrap:anywhere; }
+.item .en { font-size:.98rem; }
+.item .tr { font-size:.8rem; }
+.item.placed { display:flex; gap:10px; align-items:flex-start; background:var(--accent-soft); border-color:var(--accent); }
+.item.placed .n { font-weight:700; font-variant-numeric:tabular-nums; min-width:1.4em; }
+.item.right, .item.matched { background:var(--good-bg); border-color:var(--good); }
+.item.wrong { background:var(--bad-bg); border-color:var(--bad); }
+.item.sel { border-color:var(--accent); outline:3px solid var(--accent-soft); background:var(--accent-soft); }
+.item[disabled] { cursor:default; }
+.slot { border:1.5px dashed var(--line); border-radius:9px; min-height:46px; padding:10px 12px; color:var(--muted); font-size:.85rem; }
+.note { margin-top:10px; font-size:.92rem; }
+.note.good { color:var(--good); font-weight:700; } .note.bad { color:var(--bad); font-weight:700; }
+
+/* exam */
+.marks { font-size:.85rem; font-weight:700; background:var(--ink); color:var(--bg); border-radius:6px; padding:2px 9px; white-space:nowrap; }
+.kw { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.kw span { font-size:.82rem; padding:2px 10px; border-radius:999px; border:1px solid var(--line); background:var(--bg); }
+textarea { width:100%; min-height:110px; margin-top:12px; padding:10px 12px; border:1.5px solid var(--line); border-radius:9px; background:var(--bg); color:var(--ink); font:inherit; resize:vertical; }
+.pts { display:grid; gap:8px; margin-top:12px; }
+.pt { display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1.5px solid var(--line); border-radius:9px; cursor:pointer; }
+.pt input { width:20px; height:20px; margin-top:3px; flex:0 0 auto; accent-color:var(--accent); }
+.pt.on { background:var(--good-bg); border-color:var(--good); }
+.pt > span { min-width:0; }
+.foot { margin-top:28px; font-size:.82rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; }
+.linkbtn { background:none; border:none; padding:6px 0; color:var(--muted); text-decoration:underline; min-height:44px; }
+@media (prefers-reduced-motion: no-preference) { .opt, .item, .btn, .pill, .chip { transition:background-color .15s, border-color .15s; } }
+</style>
+</head><body>
+<div id="app"></div>
+<script>
+// Each text is [English, Thai, Spanish]. Cards: [term, definition]. Quiz: q, o (options), a (correct index), e (explanation)
+const LESSONS = [];
+LESSONS.push({
+  id: 1, title: ["Why do living things reproduce?", "ทำไมสิ่งมีชีวิตจึงสืบพันธุ์?", "¿Por qué se reproducen los seres vivos?"],
+  cards: [
+    [["Reproduction","การสืบพันธุ์","Reproducción"],["The biological process by which new organisms (offspring) are produced from their parents.","กระบวนการทางชีววิทยาที่ทำให้เกิดสิ่งมีชีวิตใหม่ (ลูก) จากพ่อแม่","El proceso biológico por el que los padres producen nuevos organismos (descendientes)."]],
+    [["Gamete","เซลล์สืบพันธุ์ (แกมีต)","Gameto"],["A specialised sex cell, e.g. sperm, egg or pollen.","เซลล์เพศที่มีหน้าที่เฉพาะ เช่น อสุจิ ไข่ หรือเรณู","Una célula sexual especializada, por ejemplo espermatozoide, óvulo o polen."]],
+    [["Species","ชนิด (สปีชีส์)","Especie"],["A group of similar organisms that can breed together.","กลุ่มสิ่งมีชีวิตที่คล้ายกันและผสมพันธุ์กันได้","Un grupo de organismos parecidos que pueden reproducirse entre sí."]],
+    [["Sexual reproduction","การสืบพันธุ์แบบอาศัยเพศ","Reproducción sexual"],["Two parents and gametes are involved. Offspring are genetically different (high variation).","ใช้พ่อแม่สองตัวและเซลล์สืบพันธุ์ ลูกมีพันธุกรรมแตกต่างกัน (มีความหลากหลายสูง)","Intervienen dos progenitores y gametos. Los descendientes son genéticamente distintos (mucha variación)."]],
+    [["Asexual reproduction","การสืบพันธุ์แบบไม่อาศัยเพศ","Reproducción asexual"],["One parent, no gametes. Offspring are genetically identical clones.","ใช้พ่อแม่หนึ่งตัว ไม่มีเซลล์สืบพันธุ์ ลูกเป็นโคลนที่มีพันธุกรรมเหมือนกัน","Un solo progenitor, sin gametos. Los descendientes son clones genéticamente idénticos."]],
+    [["Clone","โคลน","Clon"],["An offspring that is genetically identical to its parent.","ลูกที่มีพันธุกรรมเหมือนกับพ่อแม่ทุกประการ","Un descendiente genéticamente idéntico a su progenitor."]],
+    [["Genetic variation","ความหลากหลายทางพันธุกรรม","Variación genética"],["Differences between individuals. It helps a species survive disease or a changing environment.","ความแตกต่างระหว่างแต่ละตัว ช่วยให้สปีชีส์อยู่รอดจากโรคหรือสิ่งแวดล้อมที่เปลี่ยนไป","Las diferencias entre individuos. Ayuda a una especie a sobrevivir a enfermedades o a cambios del entorno."]]
+  ],
+  quiz: [
+    { q:["Which of these is an example of asexual reproduction?","ข้อใดเป็นตัวอย่างของการสืบพันธุ์แบบไม่อาศัยเพศ?","¿Cuál de estos es un ejemplo de reproducción asexual?"],
+      o:[["Human fertilisation","การปฏิสนธิของมนุษย์","Fertilización humana"],["Bacteria dividing","แบคทีเรียแบ่งตัว","Bacterias que se dividen"],["Salmon spawning","ปลาแซลมอนวางไข่","El desove del salmón"]],
+      a:1, e:["Bacteria divide by binary fission: one parent, no gametes.","แบคทีเรียแบ่งตัวแบบไบนารีฟิชชัน คือมีพ่อแม่หนึ่งตัวและไม่มีเซลล์สืบพันธุ์","Las bacterias se dividen por fisión binaria: un progenitor y sin gametos."] },
+    { q:["Sexual reproduction always needs only one parent.","การสืบพันธุ์แบบอาศัยเพศต้องใช้พ่อแม่เพียงหนึ่งตัวเสมอ","La reproducción sexual siempre necesita un solo progenitor."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. Sexual reproduction needs two parents, each giving a gamete.","เท็จ การสืบพันธุ์แบบอาศัยเพศต้องใช้พ่อแม่สองตัว ตัวละหนึ่งเซลล์สืบพันธุ์","Falso. La reproducción sexual necesita dos progenitores, cada uno aporta un gameto."] },
+    { q:["What is the main advantage of sexual reproduction?","ข้อดีหลักของการสืบพันธุ์แบบอาศัยเพศคืออะไร?","¿Cuál es la principal ventaja de la reproducción sexual?"],
+      o:[["It is fast","รวดเร็ว","Es rápida"],["No gametes are needed","ไม่ต้องใช้เซลล์สืบพันธุ์","No hacen falta gametos"],["Genetic variation","ความหลากหลายทางพันธุกรรม","Variación genética"]],
+      a:2, e:["Variation means some individuals may survive if the environment changes or disease appears.","ความหลากหลายทำให้บางตัวอาจรอดได้เมื่อสิ่งแวดล้อมเปลี่ยนหรือมีโรคเกิดขึ้น","La variación permite que algunos individuos sobrevivan si cambia el entorno o aparece una enfermedad."] },
+    { q:["A species with low genetic variation is at greater risk from disease.","สปีชีส์ที่มีความหลากหลายทางพันธุกรรมต่ำมีความเสี่ยงต่อโรคมากกว่า","Una especie con poca variación genética corre más riesgo ante las enfermedades."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:0, e:["If all individuals are clones, one disease can affect them all.","ถ้าทุกตัวเป็นโคลน โรคเดียวอาจทำลายได้ทั้งหมด","Si todos son clones, una sola enfermedad puede afectarlos a todos."] },
+    { q:["Which term describes a specialised sex cell?","คำใดหมายถึงเซลล์เพศที่มีหน้าที่เฉพาะ?","¿Qué término describe una célula sexual especializada?"],
+      o:[["Zygote","ไซโกต","Cigoto"],["Clone","โคลน","Clon"],["Gamete","เซลล์สืบพันธุ์ (แกมีต)","Gameto"]],
+      a:2, e:["Gametes are sex cells before fertilisation. Do not confuse them with the zygote.","แกมีตคือเซลล์เพศก่อนการปฏิสนธิ อย่าสับสนกับไซโกต","Los gametos son células sexuales anteriores a la fertilización. No los confundas con el cigoto."] }
+  ]
+});
+LESSONS.push({
+  id: 2, title: ["Specialised reproductive cells", "เซลล์สืบพันธุ์ที่มีหน้าที่เฉพาะ", "Células reproductoras especializadas"],
+  cards: [
+    [["Haploid","แฮพลอยด์","Haploide"],["Having half the normal set of genetic information. Gametes are haploid.","มีข้อมูลทางพันธุกรรมครึ่งหนึ่งของปกติ เซลล์สืบพันธุ์เป็นแฮพลอยด์","Tener la mitad del material genético normal. Los gametos son haploides."]],
+    [["Acrosome","อะโครโซม","Acrosoma"],["The sperm head contains enzymes that digest through the egg's jelly coat.","หัวของอสุจิมีเอนไซม์ที่ย่อยเปลือกวุ้นของไข่","La cabeza del espermatozoide contiene enzimas que digieren la cubierta gelatinosa del óvulo."]],
+    [["Mitochondria","ไมโทคอนเดรีย","Mitocondrias"],["Structures that release energy. Sperm have many in the midpiece for swimming.","โครงสร้างที่ปล่อยพลังงาน อสุจิมีมากที่ส่วนกลางลำตัวเพื่อใช้ว่ายน้ำ","Estructuras que liberan energía. Los espermatozoides tienen muchas en la pieza media para nadar."]],
+    [["Tail (flagellum)","หาง (แฟลเจลลัม)","Cola (flagelo)"],["Moves the sperm forward, so it can swim towards the egg.","ผลักอสุจิไปข้างหน้าเพื่อว่ายไปหาไข่","Impulsa al espermatozoide hacia delante para nadar hacia el óvulo."]],
+    [["Cytoplasm (egg)","ไซโทพลาซึม (ในไข่)","Citoplasma (óvulo)"],["A large food store that feeds the early embryo after fertilisation.","แหล่งอาหารขนาดใหญ่ที่เลี้ยงตัวอ่อนระยะแรกหลังการปฏิสนธิ","Una gran reserva de alimento que nutre al embrión temprano tras la fertilización."]],
+    [["Jelly coat","เปลือกวุ้น","Cubierta gelatinosa"],["Protects the egg. After one sperm enters it changes to block other sperm.","ปกป้องไข่ หลังอสุจิตัวหนึ่งเข้าไปแล้วจะเปลี่ยนแปลงเพื่อกันอสุจิตัวอื่น","Protege el óvulo. Cuando entra un espermatozoide, cambia para bloquear a los demás."]],
+    [["Adaptation","การปรับตัว (ลักษณะที่เหมาะกับหน้าที่)","Adaptación"],["A feature that helps a cell do its job well.","ลักษณะที่ช่วยให้เซลล์ทำหน้าที่ได้ดี","Una característica que ayuda a una célula a cumplir bien su función."]]
+  ],
+  quiz: [
+    { q:["Why do sperm cells contain many mitochondria?","ทำไมอสุจิจึงมีไมโทคอนเดรียจำนวนมาก?","¿Por qué los espermatozoides tienen muchas mitocondrias?"],
+      o:[["To store food for the embryo","เก็บอาหารให้ตัวอ่อน","Para almacenar alimento para el embrión"],["To release energy for the tail to swim","ปล่อยพลังงานให้หางว่ายน้ำ","Para liberar energía para que la cola nade"],["To digest the jelly coat","ย่อยเปลือกวุ้น","Para digerir la cubierta gelatinosa"],["To carry oxygen","ขนส่งออกซิเจน","Para transportar oxígeno"]],
+      a:1, e:["Mitochondria release energy, which the tail needs to swim to the egg.","ไมโทคอนเดรียปล่อยพลังงานที่หางต้องใช้ว่ายไปหาไข่","Las mitocondrias liberan energía que la cola necesita para nadar hasta el óvulo."] },
+    { q:["Why is the egg cell so large?","ทำไมเซลล์ไข่จึงมีขนาดใหญ่?","¿Por qué el óvulo es tan grande?"],
+      o:[["To swim faster","เพื่อว่ายเร็วขึ้น","Para nadar más rápido"],["To hold a big store of food in its cytoplasm","เพื่อเก็บอาหารไว้ในไซโทพลาซึมมาก ๆ","Para guardar mucho alimento en su citoplasma"],["To hold more sperm","เพื่อบรรจุอสุจิได้มากขึ้น","Para contener más espermatozoides"]],
+      a:1, e:["The cytoplasm feeds the dividing embryo before it implants.","ไซโทพลาซึมเลี้ยงตัวอ่อนที่กำลังแบ่งตัวก่อนฝังตัว","El citoplasma alimenta al embrión que se divide antes de implantarse."] },
+    { q:["What does the acrosome (enzymes in the sperm head) do?","อะโครโซม (เอนไซม์ในหัวอสุจิ) ทำหน้าที่อะไร?","¿Qué hace el acrosoma (enzimas de la cabeza del espermatozoide)?"],
+      o:[["Digests through the egg's jelly coat","ย่อยผ่านเปลือกวุ้นของไข่","Digiere la cubierta gelatinosa del óvulo"],["Powers the tail","ให้พลังงานแก่หาง","Da energía a la cola"],["Stores DNA","เก็บ DNA","Almacena ADN"]],
+      a:0, e:["The enzymes break through the egg's coat so the sperm can get in.","เอนไซม์ทำลายเปลือกไข่เพื่อให้อสุจิเข้าไปได้","Las enzimas rompen la cubierta del óvulo para que el espermatozoide entre."] },
+    { q:["Sperm and egg cells have nothing in common.","เซลล์อสุจิและเซลล์ไข่ไม่มีอะไรเหมือนกันเลย","Los espermatozoides y los óvulos no tienen nada en común."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. Both are haploid gametes with a nucleus holding genetic material.","เท็จ ทั้งสองเป็นแกมีตแฮพลอยด์ที่มีนิวเคลียสบรรจุสารพันธุกรรม","Falso. Ambos son gametos haploides con un núcleo que contiene material genético."] },
+    { q:["Which is a feature of the EGG only?","ข้อใดเป็นลักษณะของ “ไข่” เท่านั้น?","¿Qué característica es solo del ÓVULO?"],
+      o:[["Tail","หาง","Cola"],["Millions released at once","ปล่อยออกมาหลายล้านเซลล์พร้อมกัน","Millones liberados a la vez"],["Does not move by itself","เคลื่อนที่เองไม่ได้","No se mueve por sí mismo"],["Many mitochondria","ไมโทคอนเดรียจำนวนมาก","Muchas mitocondrias"]],
+      a:2, e:["Cilia in the oviduct sweep the egg along. Only one egg is usually released at a time.","ซิเลียในท่อนำไข่พัดพาไข่ไป โดยปกติปล่อยไข่ครั้งละหนึ่งใบ","Los cilios del oviducto arrastran el óvulo. Normalmente se libera solo uno cada vez."] }
+  ]
+});
+LESSONS.push({
+  id: 3, title: ["The male reproductive system", "ระบบสืบพันธุ์เพศชาย", "El aparato reproductor masculino"],
+  cards: [
+    [["Testes","อัณฑะ","Testículos"],["Produce sperm cells.","ผลิตเซลล์อสุจิ","Producen espermatozoides."]],
+    [["Scrotum","ถุงอัณฑะ","Escroto"],["A sac of skin that holds the testes outside the body, keeping them cooler.","ถุงผิวหนังที่ห่อหุ้มอัณฑะไว้นอกร่างกายเพื่อให้เย็นกว่า","Bolsa de piel que mantiene los testículos fuera del cuerpo, más frescos."]],
+    [["Sperm duct","ท่อนำอสุจิ","Conducto deferente"],["Carries sperm from the testes towards the urethra.","นำอสุจิจากอัณฑะไปยังท่อปัสสาวะ","Lleva los espermatozoides desde los testículos hacia la uretra."]],
+    [["Gland","ต่อม","Glándula"],["Adds fluid to sperm to make semen.","เติมของเหลวให้อสุจิเพื่อสร้างน้ำอสุจิ","Añade líquido a los espermatozoides para formar el semen."]],
+    [["Urethra","ท่อปัสสาวะ","Uretra"],["Carries semen (and urine, but never at the same time) out of the body.","นำน้ำอสุจิ (และปัสสาวะ แต่ไม่พร้อมกัน) ออกจากร่างกาย","Lleva el semen (y la orina, pero nunca a la vez) fuera del cuerpo."]],
+    [["Penis","อวัยวะเพศชาย","Pene"],["Passes semen into the female body during sexual intercourse.","ส่งน้ำอสุจิเข้าสู่ร่างกายเพศหญิงระหว่างการมีเพศสัมพันธ์","Introduce el semen en el cuerpo femenino durante el acto sexual."]],
+    [["Semen","น้ำอสุจิ","Semen"],["Sperm mixed with fluid from the gland.","อสุจิผสมกับของเหลวจากต่อม","Espermatozoides mezclados con el líquido de la glándula."]]
+  ],
+  quiz: [
+    { q:["Which of these is NOT part of the male reproductive system?","ข้อใดไม่ใช่ส่วนหนึ่งของระบบสืบพันธุ์เพศชาย?","¿Cuál NO forma parte del aparato reproductor masculino?"],
+      o:[["Testes","อัณฑะ","Testículos"],["Bladder","กระเพาะปัสสาวะ","Vejiga"],["Sperm duct","ท่อนำอสุจิ","Conducto deferente"],["Gland","ต่อม","Glándula"]],
+      a:1, e:["The bladder stores urine. It is a urinary organ, not a reproductive one.","กระเพาะปัสสาวะเก็บปัสสาวะ เป็นอวัยวะของระบบขับถ่ายปัสสาวะ ไม่ใช่ระบบสืบพันธุ์","La vejiga almacena orina. Es un órgano urinario, no reproductor."] },
+    { q:["Why are the testes outside the main body?","ทำไมอัณฑะจึงอยู่นอกลำตัว?","¿Por qué los testículos están fuera del cuerpo?"],
+      o:[["Sperm production works best a few degrees below 37°C","การผลิตอสุจิทำงานได้ดีที่สุดเมื่ออุณหภูมิต่ำกว่า 37°C สองสามองศา","La producción de espermatozoides funciona mejor unos grados por debajo de 37 °C"],["They need more oxygen","ต้องการออกซิเจนมากกว่า","Necesitan más oxígeno"],["There is no room inside","ข้างในไม่มีที่พอ","No hay espacio dentro"]],
+      a:0, e:["The scrotum keeps the testes about 2–4°C cooler. Always link the cooler temperature to sperm production for the mark.","ถุงอัณฑะทำให้อัณฑะเย็นกว่าประมาณ 2–4°C ต้องเชื่อมอุณหภูมิที่เย็นกว่ากับการผลิตอสุจิจึงได้คะแนน","El escroto mantiene los testículos unos 2–4 °C más fríos. Para el punto, relaciona la temperatura con la producción de espermatozoides."] },
+    { q:["Put the pathway in the right order. Which comes right AFTER the sperm duct?","เรียงลำดับเส้นทาง อะไรมาต่อจากท่อนำอสุจิ?","Ordena el recorrido. ¿Qué viene justo DESPUÉS del conducto deferente?"],
+      o:[["Testes","อัณฑะ","Testículos"],["Gland (fluid added)","ต่อม (เติมของเหลว)","Glándula (se añade líquido)"],["Scrotum","ถุงอัณฑะ","Escroto"]],
+      a:1, e:["Testes → sperm duct → gland → urethra → out through the penis.","อัณฑะ → ท่อนำอสุจิ → ต่อม → ท่อปัสสาวะ → ออกทางอวัยวะเพศ","Testículos → conducto deferente → glándula → uretra → sale por el pene."] },
+    { q:["Which structure carries both semen and urine (not at the same time)?","โครงสร้างใดนำทั้งน้ำอสุจิและปัสสาวะ (ไม่พร้อมกัน)?","¿Qué estructura lleva semen y orina (no a la vez)?"],
+      o:[["Sperm duct","ท่อนำอสุจิ","Conducto deferente"],["Urethra","ท่อปัสสาวะ","Uretra"],["Scrotum","ถุงอัณฑะ","Escroto"]],
+      a:1, e:["The urethra runs through the penis.","ท่อปัสสาวะผ่านภายในอวัยวะเพศชาย","La uretra recorre el pene."] },
+    { q:["A vasectomy cuts and seals which structure?","การทำหมันชายตัดและผูกโครงสร้างใด?","¿Qué estructura corta y sella una vasectomía?"],
+      o:[["Urethra","ท่อปัสสาวะ","Uretra"],["Sperm duct","ท่อนำอสุจิ","Conducto deferente"],["Testes","อัณฑะ","Testículos"]],
+      a:1, e:["Sperm can no longer reach the urethra, but the testes still work.","อสุจิไม่สามารถไปถึงท่อปัสสาวะได้อีก แต่อัณฑะยังทำงานอยู่","Los espermatozoides ya no llegan a la uretra, pero los testículos siguen funcionando."] }
+  ]
+});
+LESSONS.push({
+  id: 4, title: ["The female reproductive system", "ระบบสืบพันธุ์เพศหญิง", "El aparato reproductor femenino"],
+  cards: [
+    [["Ovary","รังไข่","Ovario"],["Releases egg cells and female hormones. There are two.","ปล่อยเซลล์ไข่และฮอร์โมนเพศหญิง มีสองข้าง","Libera óvulos y hormonas femeninas. Hay dos."]],
+    [["Oviduct (Fallopian tube)","ท่อนำไข่ (ท่อนำไข่ฟัลโลเปียน)","Oviducto (trompa de Falopio)"],["Carries the egg from the ovary towards the uterus. Usual site of fertilisation.","นำไข่จากรังไข่ไปยังมดลูก เป็นที่ที่มักเกิดการปฏิสนธิ","Lleva el óvulo del ovario al útero. Lugar habitual de la fertilización."]],
+    [["Uterus","มดลูก","Útero"],["Muscular organ with a soft lining where a fertilised egg develops into a baby.","อวัยวะกล้ามเนื้อที่มีเยื่อบุนุ่ม เป็นที่ที่ไข่ที่ปฏิสนธิแล้วเจริญเป็นทารก","Órgano muscular con un revestimiento blando donde el óvulo fecundado se desarrolla hasta ser un bebé."]],
+    [["Cervix","ปากมดลูก","Cuello uterino (cérvix)"],["Ring of muscle separating the uterus from the vagina.","วงแหวนกล้ามเนื้อที่กั้นระหว่างมดลูกกับช่องคลอด","Anillo de músculo que separa el útero de la vagina."]],
+    [["Vagina","ช่องคลอด","Vagina"],["Muscular tube leading to the outside of the body.","ท่อกล้ามเนื้อที่ต่อไปสู่ภายนอกร่างกาย","Tubo muscular que conduce al exterior del cuerpo."]],
+    [["Fertilisation","การปฏิสนธิ","Fertilización"],["The joining of the nuclei of a sperm and an egg. It happens in the oviduct, not the uterus.","การรวมนิวเคลียสของอสุจิกับไข่ เกิดในท่อนำไข่ ไม่ใช่ในมดลูก","La unión de los núcleos de un espermatozoide y un óvulo. Ocurre en el oviducto, no en el útero."]]
+  ],
+  quiz: [
+    { q:["Where does fertilisation usually occur?","การปฏิสนธิมักเกิดที่ไหน?","¿Dónde suele ocurrir la fertilización?"],
+      o:[["Ovary","รังไข่","Ovario"],["Oviduct","ท่อนำไข่","Oviducto"],["Uterus","มดลูก","Útero"],["Cervix","ปากมดลูก","Cuello uterino"]],
+      a:1, e:["Sperm meet the egg in the oviduct. The uterus is where the fertilised egg later implants and develops.","อสุจิพบไข่ในท่อนำไข่ มดลูกคือที่ที่ไข่ที่ปฏิสนธิแล้วมาฝังตัวและเจริญเติบโตภายหลัง","Los espermatozoides encuentran el óvulo en el oviducto. El útero es donde después se implanta y se desarrolla."] },
+    { q:["Which organ releases egg cells?","อวัยวะใดปล่อยเซลล์ไข่?","¿Qué órgano libera óvulos?"],
+      o:[["Uterus","มดลูก","Útero"],["Ovary","รังไข่","Ovario"],["Cervix","ปากมดลูก","Cuello uterino"]],
+      a:1, e:["The ovaries release eggs and female hormones.","รังไข่ปล่อยไข่และฮอร์โมนเพศหญิง","Los ovarios liberan óvulos y hormonas femeninas."] },
+    { q:["Which structure is a ring of muscle between the uterus and vagina?","โครงสร้างใดเป็นวงแหวนกล้ามเนื้อระหว่างมดลูกกับช่องคลอด?","¿Qué estructura es un anillo de músculo entre el útero y la vagina?"],
+      o:[["Oviduct","ท่อนำไข่","Oviducto"],["Cervix","ปากมดลูก","Cuello uterino"],["Ovary","รังไข่","Ovario"]],
+      a:1, e:["The cervix keeps the uterus closed during pregnancy.","ปากมดลูกช่วยปิดมดลูกไว้ระหว่างตั้งครรภ์","El cuello uterino mantiene el útero cerrado durante el embarazo."] },
+    { q:["Why does the uterus have thick muscular walls and a rich blood supply?","ทำไมมดลูกจึงมีผนังกล้ามเนื้อหนาและมีเลือดมาเลี้ยงมาก?","¿Por qué el útero tiene paredes musculares gruesas y mucho riego sanguíneo?"],
+      o:[["To stretch as the foetus grows, contract at birth, and supply nutrients and oxygen","เพื่อยืดขยายเมื่อทารกโต หดตัวตอนคลอด และส่งสารอาหารกับออกซิเจน","Para estirarse cuando crece el feto, contraerse en el parto y aportar nutrientes y oxígeno"],["To make sperm","เพื่อผลิตอสุจิ","Para fabricar espermatozoides"],["To release eggs","เพื่อปล่อยไข่","Para liberar óvulos"]],
+      a:0, e:["Link both parts to pregnancy: growth and birth (muscle), nutrients (blood).","เชื่อมทั้งสองส่วนกับการตั้งครรภ์ คือการเจริญเติบโตและการคลอด (กล้ามเนื้อ) และสารอาหาร (เลือด)","Relaciona ambas cosas con el embarazo: crecimiento y parto (músculo), nutrientes (sangre)."] }
+  ]
+});
+LESSONS.push({
+  id: 5, title: ["Puberty", "วัยแรกรุ่น", "La pubertad"],
+  cards: [
+    [["Puberty","วัยแรกรุ่น","Pubertad"],["The stage when the body changes and becomes able to reproduce. It is gradual and starts at different ages.","ช่วงที่ร่างกายเปลี่ยนแปลงจนพร้อมสืบพันธุ์ เกิดขึ้นทีละน้อยและเริ่มตอนอายุต่างกัน","La etapa en que el cuerpo cambia y se vuelve capaz de reproducirse. Es gradual y empieza a edades distintas."]],
+    [["Hormone","ฮอร์โมน","Hormona"],["A chemical messenger made in one part of the body, carried in the blood, that changes other parts.","สารเคมีที่ทำหน้าที่ส่งสัญญาณ สร้างในส่วนหนึ่งของร่างกาย เดินทางในเลือด และทำให้ส่วนอื่นเปลี่ยนแปลง","Un mensajero químico que se fabrica en una parte del cuerpo, viaja por la sangre y produce cambios en otras partes."]],
+    [["Testosterone","เทสโทสเตอโรน","Testosterona"],["Present in everyone, but much higher in boys at puberty. Causes a deeper voice and more muscle.","มีในทุกคน แต่สูงกว่ามากในเด็กชายช่วงวัยแรกรุ่น ทำให้เสียงทุ้มและกล้ามเนื้อเพิ่ม","Está en todas las personas, pero es mucho más alta en los chicos en la pubertad. Voz más grave y más músculo."]],
+    [["Oestrogen","เอสโทรเจน","Estrógeno"],["Present in everyone, but much higher in girls at puberty. Causes breast development and periods.","มีในทุกคน แต่สูงกว่ามากในเด็กหญิงช่วงวัยแรกรุ่น ทำให้หน้าอกพัฒนาและมีประจำเดือน","Está en todas las personas, pero es mucho más alto en las chicas en la pubertad. Desarrollo de los pechos y menstruación."]],
+    [["Physical changes","การเปลี่ยนแปลงทางร่างกาย","Cambios físicos"],["Growth spurt, more body hair, oilier skin and more sweat in everyone.","ส่วนสูงเพิ่มเร็ว ขนตามตัวมากขึ้น ผิวมันขึ้น เหงื่อออกมากขึ้น ในทุกคน","Estirón, más vello corporal, piel más grasa y más sudor en todas las personas."]],
+    [["Emotional changes","การเปลี่ยนแปลงทางอารมณ์","Cambios emocionales"],["Hormones also affect the brain: feelings can be stronger, and confidence and friendships can shift.","ฮอร์โมนมีผลต่อสมองด้วย ความรู้สึกอาจแรงขึ้น และความมั่นใจกับมิตรภาพอาจเปลี่ยนไป","Las hormonas también afectan al cerebro: las emociones pueden ser más intensas y cambiar la confianza y las amistades."]]
+  ],
+  quiz: [
+    { q:["Which substance starts puberty?","สารใดเริ่มต้นวัยแรกรุ่น?","¿Qué sustancia inicia la pubertad?"],
+      o:[["Blood","เลือด","Sangre"],["Hormones","ฮอร์โมน","Hormonas"],["Nutrients","สารอาหาร","Nutrientes"],["Muscles","กล้ามเนื้อ","Músculos"]],
+      a:1, e:["Hormones are chemical messengers carried in the blood that trigger the changes.","ฮอร์โมนคือสารส่งสัญญาณที่เดินทางในเลือดและกระตุ้นให้เกิดการเปลี่ยนแปลง","Las hormonas son mensajeros químicos que viajan por la sangre y desencadenan los cambios."] },
+    { q:["Everyone starts puberty at exactly the same age.","ทุกคนเริ่มเข้าสู่วัยแรกรุ่นตอนอายุเท่ากันพอดี","Todo el mundo empieza la pubertad exactamente a la misma edad."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. Timing varies between individuals and that is normal.","เท็จ ช่วงเวลาแตกต่างกันในแต่ละคน และเป็นเรื่องปกติ","Falso. El momento varía entre personas y es normal."] },
+    { q:["Puberty happens suddenly, all at once.","วัยแรกรุ่นเกิดขึ้นอย่างฉับพลันในคราวเดียว","La pubertad ocurre de repente, de una sola vez."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. Hormone levels rise gradually and changes happen over several years.","เท็จ ระดับฮอร์โมนค่อย ๆ เพิ่มขึ้น และการเปลี่ยนแปลงเกิดขึ้นตลอดหลายปี","Falso. Las hormonas suben poco a poco y los cambios ocurren a lo largo de varios años."] },
+    { q:["Which change happens to EVERYONE in puberty?","การเปลี่ยนแปลงใดเกิดกับ “ทุกคน” ในวัยแรกรุ่น?","¿Qué cambio ocurre en TODAS las personas en la pubertad?"],
+      o:[["Rapid growth spurt","ส่วนสูงเพิ่มเร็ว","Estirón"],["Periods begin","เริ่มมีประจำเดือน","Empieza la menstruación"],["Voice becomes deeper","เสียงทุ้มลง","La voz se hace más grave"]],
+      a:0, e:["A growth spurt, more sweat and oilier skin happen to everyone.","การสูงขึ้นเร็ว เหงื่อมากขึ้น และผิวมันขึ้น เกิดกับทุกคน","El estirón, más sudor y piel más grasa ocurren en todas las personas."] },
+    { q:["Which hormone is at much higher levels in boys during puberty?","ฮอร์โมนใดสูงกว่ามากในเด็กชายช่วงวัยแรกรุ่น?","¿Qué hormona es mucho más alta en los chicos durante la pubertad?"],
+      o:[["Oestrogen","เอสโทรเจน","Estrógeno"],["Testosterone","เทสโทสเตอโรน","Testosterona"]],
+      a:1, e:["Both hormones exist in everyone. It is the amount that changes.","ฮอร์โมนทั้งสองมีในทุกคน สิ่งที่เปลี่ยนคือปริมาณ","Ambas hormonas existen en todas las personas. Lo que cambia es la cantidad."] }
+  ]
+});
+LESSONS.push({
+  id: 6, title: ["The menstrual cycle", "รอบเดือน", "El ciclo menstrual"],
+  cards: [
+    [["Menstrual cycle","รอบเดือน","Ciclo menstrual"],["A repeating, roughly monthly process, controlled by hormones, that prepares the body for a possible pregnancy.","กระบวนการที่วนซ้ำประมาณทุกเดือน ควบคุมโดยฮอร์โมน เพื่อเตรียมร่างกายสำหรับการตั้งครรภ์ที่อาจเกิดขึ้น","Un proceso que se repite más o menos cada mes, controlado por hormonas, que prepara el cuerpo para un posible embarazo."]],
+    [["Menstruation (a period)","การมีประจำเดือน","Menstruación (regla)"],["If there is no pregnancy, the old uterus lining breaks down and leaves the body.","ถ้าไม่ตั้งครรภ์ เยื่อบุมดลูกเก่าจะสลายตัวและออกจากร่างกาย","Si no hay embarazo, el revestimiento antiguo del útero se desprende y sale del cuerpo."]],
+    [["Ovulation","การตกไข่","Ovulación"],["An egg is released from the ovary, around the middle of the cycle.","ไข่ถูกปล่อยจากรังไข่ ประมาณกลางรอบเดือน","Se libera un óvulo del ovario, hacia la mitad del ciclo."]],
+    [["Uterus lining","เยื่อบุมดลูก","Revestimiento del útero"],["Thickens each cycle so it can support a fertilised egg if fertilisation happens.","หนาขึ้นในแต่ละรอบเพื่อรองรับไข่ที่ปฏิสนธิแล้ว หากเกิดการปฏิสนธิ","Se engrosa en cada ciclo para poder sostener un óvulo fecundado si hay fertilización."]],
+    [["Order of the cycle","ลำดับของรอบเดือน","Orden del ciclo"],["Lining breaks down → lining thickens and egg matures → egg released → lining stays thick.","เยื่อบุสลาย → เยื่อบุหนาขึ้นและไข่เจริญ → ปล่อยไข่ → เยื่อบุคงความหนา","El revestimiento se desprende → se engrosa y madura un óvulo → se libera el óvulo → el revestimiento sigue grueso."]],
+    [["Normal variation","ความแตกต่างที่เป็นปกติ","Variación normal"],["Cycle length differs between people (e.g. 24, 28 or 32 days). 28 days is only a model.","ความยาวรอบเดือนต่างกันในแต่ละคน (เช่น 24, 28 หรือ 32 วัน) 28 วันเป็นเพียงแบบจำลอง","La duración del ciclo varía entre personas (p. ej. 24, 28 o 32 días). 28 días es solo un modelo."]]
+  ],
+  quiz: [
+    { q:["When is an egg usually released?","โดยทั่วไปไข่ถูกปล่อยเมื่อใด?","¿Cuándo se suele liberar un óvulo?"],
+      o:[["During menstruation","ระหว่างมีประจำเดือน","Durante la menstruación"],["Around the middle of the cycle","ประมาณกลางรอบเดือน","Hacia la mitad del ciclo"],["At the end of the cycle","ปลายรอบเดือน","Al final del ciclo"],["Only after fertilisation","หลังการปฏิสนธิเท่านั้น","Solo después de la fertilización"]],
+      a:1, e:["Ovulation happens roughly halfway through the cycle, separate from menstruation.","การตกไข่เกิดประมาณกึ่งกลางรอบเดือน แยกจากการมีประจำเดือน","La ovulación ocurre más o menos a mitad del ciclo, separada de la menstruación."] },
+    { q:["Why does the uterus lining thicken?","ทำไมเยื่อบุมดลูกจึงหนาขึ้น?","¿Por qué se engrosa el revestimiento del útero?"],
+      o:[["To prepare for a possible pregnancy and support a fertilised egg","เพื่อเตรียมพร้อมสำหรับการตั้งครรภ์และรองรับไข่ที่ปฏิสนธิแล้ว","Para prepararse para un posible embarazo y sostener un óvulo fecundado"],["To release the egg","เพื่อปล่อยไข่","Para liberar el óvulo"],["To make hormones","เพื่อผลิตฮอร์โมน","Para fabricar hormonas"]],
+      a:0, e:["Say why it thickens. \"It gets thicker\" alone does not earn the mark.","ต้องบอกว่าทำไมจึงหนาขึ้น การบอกแค่ว่า “หนาขึ้น” ไม่ได้คะแนน","Explica por qué se engrosa. Decir solo «se engrosa» no da el punto."] },
+    { q:["What happens to the lining if the egg is not fertilised?","เกิดอะไรกับเยื่อบุมดลูกถ้าไข่ไม่ถูกปฏิสนธิ?","¿Qué le pasa al revestimiento si el óvulo no es fecundado?"],
+      o:[["It breaks down and leaves the body (a period)","สลายตัวและออกจากร่างกาย (ประจำเดือน)","Se desprende y sale del cuerpo (la regla)"],["It stays thick forever","หนาอยู่ตลอดไป","Se queda grueso para siempre"],["It turns into an embryo","กลายเป็นตัวอ่อน","Se convierte en un embrión"]],
+      a:0, e:["Then the cycle repeats.","จากนั้นรอบเดือนจะวนซ้ำ","Después el ciclo se repite."] },
+    { q:["Every person has a 28-day cycle.","ทุกคนมีรอบเดือน 28 วัน","Todas las personas tienen un ciclo de 28 días."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. 28 days is a useful model, but real cycles vary and that is normal.","เท็จ 28 วันเป็นแบบจำลองที่มีประโยชน์ แต่รอบเดือนจริงแตกต่างกันและเป็นเรื่องปกติ","Falso. 28 días es un modelo útil, pero los ciclos reales varían y es normal."] },
+    { q:["What controls the menstrual cycle?","อะไรควบคุมรอบเดือน?","¿Qué controla el ciclo menstrual?"],
+      o:[["Hormones","ฮอร์โมน","Las hormonas"],["The bladder","กระเพาะปัสสาวะ","La vejiga"],["The placenta","รก","La placenta"]],
+      a:0, e:["Hormones control the repeating monthly process.","ฮอร์โมนควบคุมกระบวนการที่วนซ้ำทุกเดือน","Las hormonas controlan este proceso mensual repetido."] }
+  ]
+});
+LESSONS.push({
+  id: 7, title: ["Fertilisation", "การปฏิสนธิ", "La fertilización"],
+  cards: [
+    [["Fertilisation","การปฏิสนธิ","Fertilización"],["The joining of a sperm cell and an egg cell to make one new cell. It happens in the oviduct.","การรวมกันของเซลล์อสุจิและเซลล์ไข่เป็นเซลล์ใหม่หนึ่งเซลล์ เกิดในท่อนำไข่","La unión de un espermatozoide y un óvulo para formar una célula nueva. Ocurre en el oviducto."]],
+    [["Zygote","ไซโกต","Cigoto"],["The single new cell made by fertilisation, with genetic information from both parents.","เซลล์ใหม่เซลล์เดียวที่เกิดจากการปฏิสนธิ มีข้อมูลพันธุกรรมจากพ่อแม่ทั้งสอง","La célula nueva que resulta de la fertilización, con información genética de ambos progenitores."]],
+    [["Nuclei fuse","นิวเคลียสหลอมรวมกัน","Fusión de los núcleos"],["The sperm and egg nuclei join, combining genetic information into one cell.","นิวเคลียสของอสุจิและไข่รวมกัน ทำให้ข้อมูลพันธุกรรมมารวมอยู่ในเซลล์เดียว","Los núcleos del espermatozoide y del óvulo se unen y combinan su información genética en una célula."]],
+    [["Membrane changes","เยื่อหุ้มเซลล์เปลี่ยนแปลง","Cambio de la membrana"],["After one sperm enters, the egg membrane changes so no other sperm can get in.","หลังอสุจิตัวหนึ่งเข้าไป เยื่อหุ้มไข่จะเปลี่ยนเพื่อไม่ให้ตัวอื่นเข้าได้","Cuando entra un espermatozoide, la membrana del óvulo cambia para que no entre ningún otro."]],
+    [["Embryo","เอ็มบริโอ (ตัวอ่อน)","Embrión"],["The growing ball of dividing cells the zygote becomes.","กลุ่มเซลล์ที่แบ่งตัวและเติบโตซึ่งเกิดจากไซโกต","La bola de células en división en que se convierte el cigoto."]],
+    [["First cell divisions","การแบ่งเซลล์ครั้งแรก","Primeras divisiones celulares"],["The zygote splits into 2, then 4, then more cells, roughly doubling every day or so.","ไซโกตแบ่งเป็น 2 แล้ว 4 แล้วมากขึ้น เพิ่มเป็นสองเท่าประมาณวันละครั้ง","El cigoto se divide en 2, luego 4 y más células, duplicándose más o menos cada día."]]
+  ],
+  quiz: [
+    { q:["What is produced immediately after fertilisation?","สิ่งใดเกิดขึ้นทันทีหลังการปฏิสนธิ?","¿Qué se forma inmediatamente después de la fertilización?"],
+      o:[["An embryo","เอ็มบริโอ","Un embrión"],["A zygote","ไซโกต","Un cigoto"],["A foetus","ทารกในครรภ์","Un feto"],["A baby","ทารก","Un bebé"]],
+      a:1, e:["A single cell, the zygote. It becomes an embryo once it starts dividing.","เซลล์เดียวคือไซโกต จะกลายเป็นเอ็มบริโอเมื่อเริ่มแบ่งตัว","Una sola célula: el cigoto. Se convierte en embrión cuando empieza a dividirse."] },
+    { q:["Why is it important that only ONE sperm fertilises the egg?","ทำไมการที่อสุจิเพียง “ตัวเดียว” ปฏิสนธิกับไข่จึงสำคัญ?","¿Por qué es importante que solo UN espermatozoide fecunde el óvulo?"],
+      o:[["It gives the correct amount of DNA for healthy development","ทำให้ได้ปริมาณ DNA ที่ถูกต้องเพื่อการเจริญเติบโตที่แข็งแรง","Da la cantidad correcta de ADN para un desarrollo sano"],["It makes the egg bigger","ทำให้ไข่ใหญ่ขึ้น","Hace más grande el óvulo"],["It makes the sperm swim faster","ทำให้อสุจิว่ายเร็วขึ้น","Hace que el espermatozoide nade más rápido"]],
+      a:0, e:["More than one sperm would cause abnormal zygotes.","ถ้ามีอสุจิมากกว่าหนึ่งตัวจะเกิดไซโกตที่ผิดปกติ","Más de un espermatozoide produciría cigotos anormales."] },
+    { q:["Which order is correct?","ลำดับใดถูกต้อง?","¿Qué orden es correcto?"],
+      o:[["Zygote → fertilisation → embryo","ไซโกต → การปฏิสนธิ → เอ็มบริโอ","Cigoto → fertilización → embrión"],["Egg released → sperm swims to egg → fertilisation → zygote → cell divisions","ปล่อยไข่ → อสุจิว่ายไปหาไข่ → ปฏิสนธิ → ไซโกต → แบ่งเซลล์","Se libera el óvulo → el espermatozoide nada hacia él → fertilización → cigoto → divisiones celulares"],["Embryo → zygote → fertilisation","เอ็มบริโอ → ไซโกต → การปฏิสนธิ","Embrión → cigoto → fertilización"]],
+      a:1, e:["Fertilisation happens in the oviduct, then the embryo travels to the uterus.","การปฏิสนธิเกิดในท่อนำไข่ จากนั้นเอ็มบริโอเดินทางไปมดลูก","La fertilización ocurre en el oviducto y luego el embrión viaja al útero."] },
+    { q:["What joins together during fertilisation?","อะไรรวมกันในระหว่างการปฏิสนธิ?","¿Qué se une durante la fertilización?"],
+      o:[["The nuclei of the sperm and egg","นิวเคลียสของอสุจิและไข่","Los núcleos del espermatozoide y del óvulo"],["Two eggs","ไข่สองใบ","Dos óvulos"],["The uterus and cervix","มดลูกและปากมดลูก","El útero y el cuello uterino"]],
+      a:0, e:["\"Sperm and egg join\" is not enough. Mention the nuclei and genetic information.","การบอกแค่ว่า “อสุจิกับไข่รวมกัน” ไม่พอ ต้องพูดถึงนิวเคลียสและข้อมูลพันธุกรรม","Decir solo «se unen» no basta. Menciona los núcleos y la información genética."] }
+  ]
+});
+LESSONS.push({
+  id: 8, title: ["Pregnancy and foetal development", "การตั้งครรภ์และพัฒนาการของทารกในครรภ์", "Embarazo y desarrollo del feto"],
+  cards: [
+    [["Implantation","การฝังตัว","Implantación"],["The embryo embeds into the thickened uterus lining, at about one week.","เอ็มบริโอฝังตัวในเยื่อบุมดลูกที่หนาตัว ประมาณหนึ่งสัปดาห์","El embrión se incrusta en el revestimiento engrosado del útero, hacia la semana."]],
+    [["Foetus","ทารกในครรภ์ (ฟีตัส)","Feto"],["From about 11 weeks, once major organs have started to form, the embryo is called a foetus.","ตั้งแต่ประมาณสัปดาห์ที่ 11 เมื่ออวัยวะสำคัญเริ่มก่อตัว เอ็มบริโอจะเรียกว่าทารกในครรภ์","A partir de unas 11 semanas, cuando empiezan a formarse los órganos principales, el embrión se llama feto."]],
+    [["Placenta","รก","Placenta"],["Where oxygen and nutrients diffuse from mother's blood to the baby, and carbon dioxide and waste diffuse the other way.","ที่ซึ่งออกซิเจนและสารอาหารแพร่จากเลือดแม่ไปสู่ทารก และคาร์บอนไดออกไซด์กับของเสียแพร่กลับ","Donde el oxígeno y los nutrientes pasan por difusión de la sangre de la madre al bebé, y el dióxido de carbono y los desechos van en sentido contrario."]],
+    [["Umbilical cord","สายสะดือ","Cordón umbilical"],["Links the foetus to the placenta. Carries oxygen and nutrients in, and waste away.","เชื่อมทารกกับรก นำออกซิเจนและสารอาหารเข้า และนำของเสียออก","Une el feto con la placenta. Lleva oxígeno y nutrientes y se lleva los desechos."]],
+    [["Diffusion","การแพร่","Difusión"],["Substances move from where there are lots to where there are fewer. This is how the placenta exchanges substances.","สารเคลื่อนที่จากที่ที่มีมากไปยังที่ที่มีน้อย รกแลกเปลี่ยนสารด้วยวิธีนี้","Las sustancias pasan de donde hay muchas a donde hay menos. Así intercambia la placenta."]],
+    [["Gestation","ระยะตั้งครรภ์","Gestación"],["The time from fertilisation to birth: about 9 months (around 40 weeks) in humans.","ช่วงเวลาตั้งแต่การปฏิสนธิถึงการคลอด ประมาณ 9 เดือน (ราว 40 สัปดาห์) ในมนุษย์","El tiempo desde la fertilización hasta el parto: unos 9 meses (alrededor de 40 semanas) en los humanos."]],
+    [["Uterus in pregnancy","มดลูกระหว่างตั้งครรภ์","El útero en el embarazo"],["Warm, cushioned, protected space. Its muscular wall later helps push the baby out.","พื้นที่อบอุ่น มีเบาะรองรับ และปลอดภัย ผนังกล้ามเนื้อช่วยดันทารกออกมาภายหลัง","Un espacio cálido, acolchado y protegido. Su pared muscular ayudará después a expulsar al bebé."]]
+  ],
+  quiz: [
+    { q:["Which structure transfers oxygen and nutrients from the mother to the developing baby?","โครงสร้างใดส่งออกซิเจนและสารอาหารจากแม่ไปยังทารกที่กำลังเจริญ?","¿Qué estructura pasa oxígeno y nutrientes de la madre al bebé en desarrollo?"],
+      o:[["The uterus","มดลูก","El útero"],["The placenta","รก","La placenta"],["The cervix","ปากมดลูก","El cuello uterino"],["The ovary","รังไข่","El ovario"]],
+      a:1, e:["The placenta is the exchange site. The umbilical cord carries substances to and from the foetus.","รกเป็นที่แลกเปลี่ยนสาร สายสะดือนำสารไปและกลับจากทารก","La placenta es el lugar de intercambio. El cordón umbilical lleva sustancias hacia y desde el feto."] },
+    { q:["Put these in order: fertilisation, zygote, embryo implants, foetus, birth. Which comes THIRD?","เรียงลำดับ: ปฏิสนธิ ไซโกต เอ็มบริโอฝังตัว ทารกในครรภ์ คลอด อะไรมาเป็นลำดับที่ 3?","Ordena: fertilización, cigoto, el embrión se implanta, feto, parto. ¿Qué va en TERCER lugar?"],
+      o:[["Foetus","ทารกในครรภ์","Feto"],["Embryo forms and implants","เอ็มบริโอก่อตัวและฝังตัว","El embrión se forma y se implanta"],["Birth","การคลอด","Parto"]],
+      a:1, e:["Fertilisation → zygote → embryo implants → foetus → birth.","ปฏิสนธิ → ไซโกต → เอ็มบริโอฝังตัว → ทารกในครรภ์ → คลอด","Fertilización → cigoto → el embrión se implanta → feto → parto."] },
+    { q:["How do substances cross the placenta?","สารผ่านรกได้อย่างไร?","¿Cómo pasan las sustancias por la placenta?"],
+      o:[["By diffusion","โดยการแพร่","Por difusión"],["The mother's and baby's blood mix directly","เลือดแม่และทารกผสมกันโดยตรง","La sangre de la madre y la del bebé se mezclan directamente"],["By the baby swallowing them","โดยทารกกลืนเข้าไป","Porque el bebé las traga"]],
+      a:0, e:["The bloods do not normally mix. Substances diffuse across the placenta.","โดยปกติเลือดไม่ผสมกัน สารแพร่ผ่านรก","La sangre normalmente no se mezcla. Las sustancias se difunden a través de la placenta."] },
+    { q:["What would happen if the umbilical cord were damaged?","จะเกิดอะไรขึ้นถ้าสายสะดือเสียหาย?","¿Qué pasaría si se dañara el cordón umbilical?"],
+      o:[["The foetus would not get enough oxygen and nutrients, and waste would build up","ทารกจะได้รับออกซิเจนและสารอาหารไม่พอ และของเสียจะสะสม","El feto no recibiría suficiente oxígeno y nutrientes y se acumularían los desechos"],["Nothing, the uterus does everything","ไม่มีอะไรเกิดขึ้น มดลูกทำทุกอย่างให้","Nada, el útero lo hace todo"],["The baby would be born at once","ทารกจะคลอดทันที","El bebé nacería enseguida"]],
+      a:0, e:["The cord is the link between the foetus and the placenta.","สายสะดือคือตัวเชื่อมระหว่างทารกกับรก","El cordón es el enlace entre el feto y la placenta."] },
+    { q:["Human gestation lasts about…","ระยะตั้งครรภ์ของมนุษย์ยาวประมาณ…","La gestación humana dura aproximadamente…"],
+      o:[["9 weeks","9 สัปดาห์","9 semanas"],["9 months (about 40 weeks)","9 เดือน (ราว 40 สัปดาห์)","9 meses (unas 40 semanas)"],["9 days","9 วัน","9 días"]],
+      a:1, e:["Gestation is the time from fertilisation to birth.","ระยะตั้งครรภ์คือช่วงตั้งแต่ปฏิสนธิถึงคลอด","La gestación es el tiempo desde la fertilización hasta el parto."] }
+  ]
+});
+LESSONS.push({
+  id: 9, title: ["Birth", "การคลอด", "El parto"],
+  cards: [
+    [["Contractions","การหดตัวของมดลูก","Contracciones"],["Rhythmic tightening and relaxing of the uterus muscles. They open the cervix and push the baby down.","การบีบและคลายตัวเป็นจังหวะของกล้ามเนื้อมดลูก ทำให้ปากมดลูกเปิดและดันทารกลงมา","Contracción y relajación rítmicas de los músculos del útero. Abren el cuello uterino y empujan al bebé hacia abajo."]],
+    [["Dilate","ขยายตัว (เปิด)","Dilatar"],["The cervix gradually opens from closed to about 10 cm, wide enough for a baby to pass.","ปากมดลูกค่อย ๆ เปิดจากปิดสนิทถึงประมาณ 10 ซม. กว้างพอให้ทารกผ่านได้","El cuello uterino se abre poco a poco, de cerrado a unos 10 cm, lo bastante para que pase un bebé."]],
+    [["Birth canal","ช่องทางคลอด","Canal del parto"],["The vagina. The baby passes through it, head first in most births.","ช่องคลอด ทารกเคลื่อนผ่านช่องนี้ ส่วนใหญ่ศีรษะออกก่อน","La vagina. El bebé pasa por ella, con la cabeza primero en la mayoría de los partos."]],
+    [["Stages of labour","ระยะของการคลอด","Etapas del parto"],["1st: cervix dilates. 2nd: baby delivered. 3rd: placenta delivered.","ระยะ 1: ปากมดลูกเปิด ระยะ 2: ทารกคลอด ระยะ 3: รกคลอด","1.ª: se dilata el cuello uterino. 2.ª: nace el bebé. 3.ª: sale la placenta."]],
+    [["Placenta (afterbirth)","รก (รกคลอด)","Placenta (alumbramiento)"],["Delivered a short time after the baby, by further gentle contractions.","คลอดหลังทารกไม่นาน ด้วยการหดตัวเบา ๆ ต่อเนื่อง","Sale poco después del bebé, con nuevas contracciones suaves."]],
+    [["First breath","ลมหายใจแรก","Primera respiración"],["After birth the baby no longer gets oxygen from the placenta, so its lungs take over.","หลังคลอดทารกไม่ได้รับออกซิเจนจากรกอีก ปอดจึงทำหน้าที่แทน","Tras el nacimiento el bebé ya no recibe oxígeno de la placenta, así que sus pulmones toman el relevo."]]
+  ],
+  quiz: [
+    { q:["What is the main purpose of contractions?","จุดประสงค์หลักของการหดตัวของมดลูกคืออะไร?","¿Cuál es la función principal de las contracciones?"],
+      o:[["Feed the baby","ให้อาหารทารก","Alimentar al bebé"],["Push the baby through the birth canal","ดันทารกผ่านช่องทางคลอด","Empujar al bebé por el canal del parto"],["Stop the placenta working","หยุดการทำงานของรก","Detener el funcionamiento de la placenta"],["Produce hormones","ผลิตฮอร์โมน","Producir hormonas"]],
+      a:1, e:["They also open the cervix. Both jobs are needed for full marks.","ยังทำให้ปากมดลูกเปิดด้วย ต้องตอบทั้งสองหน้าที่จึงได้คะแนนเต็ม","También abren el cuello uterino. Hacen falta ambas funciones para la nota máxima."] },
+    { q:["Which is the correct order of labour?","ลำดับการคลอดที่ถูกต้องคือข้อใด?","¿Cuál es el orden correcto del parto?"],
+      o:[["Baby delivered → cervix opens → contractions → placenta","ทารกคลอด → ปากมดลูกเปิด → หดตัว → รก","Nace el bebé → se abre el cuello → contracciones → placenta"],["Contractions begin → cervix opens → baby delivered → placenta delivered","เริ่มหดตัว → ปากมดลูกเปิด → ทารกคลอด → รกคลอด","Empiezan las contracciones → se abre el cuello uterino → nace el bebé → sale la placenta"],["Placenta → baby → contractions → cervix opens","รก → ทารก → หดตัว → ปากมดลูกเปิด","Placenta → bebé → contracciones → se abre el cuello"]],
+      a:1, e:["The placenta is delivered last, once the baby is born and breathing.","รกคลอดเป็นลำดับสุดท้าย เมื่อทารกคลอดและหายใจได้แล้ว","La placenta sale al final, cuando el bebé ya ha nacido y respira."] },
+    { q:["How wide does the cervix dilate?","ปากมดลูกเปิดกว้างเท่าใด?","¿Cuánto se dilata el cuello uterino?"],
+      o:[["About 1 cm","ประมาณ 1 ซม.","Unos 1 cm"],["About 10 cm","ประมาณ 10 ซม.","Unos 10 cm"],["About 50 cm","ประมาณ 50 ซม.","Unos 50 cm"]],
+      a:1, e:["About 10 cm, wide enough for a baby to pass through.","ประมาณ 10 ซม. กว้างพอให้ทารกผ่านได้","Unos 10 cm, lo bastante para que pase un bebé."] },
+    { q:["Why is the placenta delivered after the baby?","ทำไมรกจึงคลอดหลังทารก?","¿Por qué la placenta sale después del bebé?"],
+      o:[["It is no longer needed once the baby can get oxygen from the air","ไม่จำเป็นอีกแล้วเมื่อทารกได้ออกซิเจนจากอากาศ","Ya no hace falta cuando el bebé obtiene oxígeno del aire"],["It is too small","เพราะมันเล็กเกินไป","Es demasiado pequeña"],["It grows after birth","เพราะมันโตขึ้นหลังคลอด","Crece después del parto"]],
+      a:0, e:["The baby takes its first breath and its lungs take over.","ทารกหายใจครั้งแรกและปอดทำหน้าที่แทน","El bebé respira por primera vez y sus pulmones toman el relevo."] }
+  ]
+});
+LESSONS.push({
+  id: 10, title: ["Reproduction in plants", "การสืบพันธุ์ของพืช", "La reproducción en las plantas"],
+  cards: [
+    [["Anther","อับเรณู","Antera"],["Male part. Produces pollen, which contains the male gamete.","ส่วนเพศผู้ ผลิตเรณูซึ่งมีเซลล์สืบพันธุ์เพศผู้","Parte masculina. Produce polen, que contiene el gameto masculino."]],
+    [["Filament","ก้านชูอับเรณู","Filamento"],["The stalk that holds the anther up.","ก้านที่ชูอับเรณูขึ้น","El tallito que sostiene la antera."]],
+    [["Stigma","ยอดเกสรเพศเมีย","Estigma"],["Female part. A sticky surface that receives pollen.","ส่วนเพศเมีย พื้นผิวเหนียวที่รับเรณู","Parte femenina. Superficie pegajosa que recibe el polen."]],
+    [["Style","ก้านเกสรเพศเมีย","Estilo"],["Connects the stigma to the ovary.","เชื่อมยอดเกสรเพศเมียกับรังไข่","Conecta el estigma con el ovario."]],
+    [["Ovary and ovule","รังไข่และออวุล","Ovario y óvulo (ovulo vegetal)"],["The ovary contains ovules. Each ovule holds the female gamete.","รังไข่มีออวุล แต่ละออวุลมีเซลล์สืบพันธุ์เพศเมีย","El ovario contiene óvulos vegetales. Cada uno guarda el gameto femenino."]],
+    [["Pollination","การถ่ายเรณู","Polinización"],["The transfer of pollen from an anther to a stigma. It is NOT fertilisation.","การส่งเรณูจากอับเรณูไปยังยอดเกสรเพศเมีย ไม่ใช่การปฏิสนธิ","La transferencia de polen de una antera a un estigma. NO es la fertilización."]],
+    [["Pollen tube","หลอดเรณู","Tubo polínico"],["Grows from the pollen grain down the style to the ovule, carrying the male gamete nucleus.","งอกจากเมล็ดเรณูลงผ่านก้านเกสรเพศเมียถึงออวุล นำนิวเคลียสของเซลล์เพศผู้ไปด้วย","Crece desde el grano de polen por el estilo hasta el óvulo, llevando el núcleo del gameto masculino."]],
+    [["Seed dispersal","การกระจายเมล็ด","Dispersión de semillas"],["Spreading seeds away from the parent by wind, animals, explosion or water, to reduce competition.","ทำให้เมล็ดกระจายห่างจากต้นแม่ด้วยลม สัตว์ การระเบิด หรือน้ำ เพื่อลดการแย่งทรัพยากร","Esparcir las semillas lejos de la planta madre por viento, animales, explosión o agua, para reducir la competencia."]]
+  ],
+  quiz: [
+    { q:["A bee carries pollen from the anther of one flower to the stigma of another. What process is this?","ผึ้งนำเรณูจากอับเรณูของดอกหนึ่งไปยังยอดเกสรเพศเมียของอีกดอก นี่คือกระบวนการใด?","Una abeja lleva polen de la antera de una flor al estigma de otra. ¿Qué proceso es?"],
+      o:[["Fertilisation","การปฏิสนธิ","Fertilización"],["Germination","การงอกของเมล็ด","Germinación"],["Pollination","การถ่ายเรณู","Polinización"],["Seed dispersal","การกระจายเมล็ด","Dispersión de semillas"]],
+      a:2, e:["Gametes have not fused yet, so it is pollination, not fertilisation.","เซลล์สืบพันธุ์ยังไม่หลอมรวมกัน จึงเป็นการถ่ายเรณู ไม่ใช่การปฏิสนธิ","Los gametos aún no se han fusionado, así que es polinización, no fertilización."] },
+    { q:["Which is a feature of a WIND-pollinated flower?","ข้อใดเป็นลักษณะของดอกไม้ที่อาศัยลมช่วยถ่ายเรณู?","¿Qué característica tiene una flor polinizada por el VIENTO?"],
+      o:[["Large, brightly coloured petals","กลีบดอกใหญ่สีสด","Pétalos grandes y de colores vivos"],["Nectar and strong scent","น้ำหวานและกลิ่นแรง","Néctar y olor fuerte"],["Feathery stigma and huge amounts of light pollen","ยอดเกสรเพศเมียเป็นขนนกและเรณูเบาปริมาณมาก","Estigma plumoso y mucho polen ligero"]],
+      a:2, e:["Wind transfer is random, so a lot of pollen is needed.","การพาโดยลมเป็นไปอย่างสุ่ม จึงต้องมีเรณูมาก","El transporte por viento es al azar, así que hace falta mucho polen."] },
+    { q:["What happens during fertilisation in a flowering plant?","เกิดอะไรขึ้นระหว่างการปฏิสนธิในพืชดอก?","¿Qué ocurre en la fertilización de una planta con flor?"],
+      o:[["The male gamete nucleus fuses with the female gamete nucleus in the ovule","นิวเคลียสเซลล์เพศผู้รวมกับนิวเคลียสเซลล์เพศเมียในออวุล","El núcleo del gameto masculino se fusiona con el del femenino en el óvulo"],["Pollen lands on the stigma","เรณูตกลงบนยอดเกสรเพศเมีย","El polen cae sobre el estigma"],["The seed is carried away by wind","ลมพาเมล็ดไป","El viento se lleva la semilla"]],
+      a:0, e:["Then the fertilised ovule develops into a seed.","จากนั้นออวุลที่ปฏิสนธิแล้วจะเจริญเป็นเมล็ด","Después el óvulo fecundado se convierte en semilla."] },
+    { q:["Which part produces pollen?","ส่วนใดผลิตเรณู?","¿Qué parte produce polen?"],
+      o:[["Stigma","ยอดเกสรเพศเมีย","Estigma"],["Anther","อับเรณู","Antera"],["Ovary","รังไข่","Ovario"],["Style","ก้านเกสรเพศเมีย","Estilo"]],
+      a:1, e:["The anther is on top of the filament.","อับเรณูอยู่ปลายก้านชูอับเรณู","La antera está en la punta del filamento."] },
+    { q:["Why must seeds be dispersed?","ทำไมต้องมีการกระจายเมล็ด?","¿Por qué hay que dispersar las semillas?"],
+      o:[["So seedlings do not compete with the parent for light, water, space and nutrients","เพื่อไม่ให้ต้นอ่อนแย่งแสง น้ำ พื้นที่ และสารอาหารกับต้นแม่","Para que las plántulas no compitan con la madre por luz, agua, espacio y nutrientes"],["So they can be pollinated","เพื่อให้เกิดการถ่ายเรณู","Para que se polinicen"],["So the flower can grow petals","เพื่อให้ดอกมีกลีบ","Para que la flor tenga pétalos"]],
+      a:0, e:["Dispersal spreads the species into new areas.","การกระจายเมล็ดทำให้สปีชีส์ขยายไปยังพื้นที่ใหม่","La dispersión extiende la especie a nuevas zonas."] }
+  ]
+});
+LESSONS.push({
+  id: 11, title: ["Pregnancy and reproductive health", "การตั้งครรภ์และสุขภาพทางเพศและการเจริญพันธุ์", "Embarazo y salud reproductiva"],
+  cards: [
+    [["Selective barrier","เกราะกรองแบบเลือก","Barrera selectiva"],["The placenta is selective, but not a perfect barrier. Some harmful substances can cross it.","รกเลือกกรองสารได้ แต่ไม่ใช่เกราะที่สมบูรณ์ สารอันตรายบางอย่างผ่านได้","La placenta es selectiva, pero no una barrera perfecta. Algunas sustancias dañinas pueden atravesarla."]],
+    [["Carbon monoxide","คาร์บอนมอนอกไซด์","Monóxido de carbono"],["In cigarette smoke. It reduces the amount of oxygen the blood can carry.","อยู่ในควันบุหรี่ ทำให้เลือดขนส่งออกซิเจนได้น้อยลง","Está en el humo del tabaco. Reduce el oxígeno que puede transportar la sangre."]],
+    [["Nicotine","นิโคติน","Nicotina"],["In cigarette smoke. It can narrow blood vessels and reduce blood flow through the placenta.","อยู่ในควันบุหรี่ อาจทำให้หลอดเลือดตีบและเลือดไหลผ่านรกลดลง","Está en el humo del tabaco. Puede estrechar los vasos sanguíneos y reducir el flujo por la placenta."]],
+    [["Risk","ความเสี่ยง","Riesgo"],["The chance of an outcome. \"Increases the risk\" does not mean it will definitely happen.","โอกาสที่จะเกิดผลลัพธ์ “เพิ่มความเสี่ยง” ไม่ได้หมายความว่าจะเกิดขึ้นแน่นอน","La probabilidad de un resultado. «Aumenta el riesgo» no significa que vaya a ocurrir seguro."]],
+    [["Low birth weight / premature birth","น้ำหนักแรกเกิดน้อย / คลอดก่อนกำหนด","Bajo peso al nacer / parto prematuro"],["Outcomes linked to a higher risk when the mother smokes during pregnancy.","ผลลัพธ์ที่สัมพันธ์กับความเสี่ยงที่สูงขึ้นเมื่อแม่สูบบุหรี่ระหว่างตั้งครรภ์","Resultados asociados a mayor riesgo cuando la madre fuma durante el embarazo."]],
+    [["Healthy pregnancy","การตั้งครรภ์ที่แข็งแรง","Embarazo saludable"],["Balanced diet, not smoking, avoiding alcohol, medical advice and antenatal care.","กินอาหารสมดุล ไม่สูบบุหรี่ เลี่ยงแอลกอฮอล์ ปรึกษาแพทย์ และไปฝากครรภ์","Dieta equilibrada, no fumar, evitar el alcohol, consejo médico y control prenatal."]]
+  ],
+  quiz: [
+    { q:["The mother's and foetus's blood do not mix, so substances in the mother's body cannot affect the foetus.","เลือดของแม่และทารกไม่ผสมกัน ดังนั้นสารในร่างกายแม่จึงไม่มีผลต่อทารก","La sangre de la madre y la del feto no se mezclan, así que lo que hay en el cuerpo de la madre no puede afectar al feto."],
+      o:[["True","จริง","Verdadero"],["False","เท็จ","Falso"]],
+      a:1, e:["False. The placenta is not a perfect barrier. Harmful substances can cross it or reduce the oxygen reaching the foetus.","เท็จ รกไม่ใช่เกราะที่สมบูรณ์ สารอันตรายผ่านได้หรือทำให้ออกซิเจนถึงทารกน้อยลง","Falso. La placenta no es una barrera perfecta. Las sustancias dañinas pueden atravesarla o reducir el oxígeno que llega al feto."] },
+    { q:["Why can smoking affect a developing foetus?","ทำไมการสูบบุหรี่จึงมีผลต่อทารกที่กำลังเจริญ?","¿Por qué fumar puede afectar al feto en desarrollo?"],
+      o:[["Carbon monoxide and nicotine mean less oxygen and fewer nutrients reach the foetus","คาร์บอนมอนอกไซด์และนิโคตินทำให้ออกซิเจนและสารอาหารถึงทารกน้อยลง","El monóxido de carbono y la nicotina hacen que lleguen menos oxígeno y nutrientes al feto"],["Smoke makes the baby too warm","ควันทำให้ทารกร้อนเกินไป","El humo hace que el bebé tenga demasiado calor"],["It changes the baby's gender","ทำให้เพศของทารกเปลี่ยน","Cambia el sexo del bebé"]],
+      a:0, e:["Give a mechanism, then say it increases the risk of low birth weight or premature birth.","ต้องอธิบายกลไก แล้วบอกว่าเพิ่มความเสี่ยงของน้ำหนักแรกเกิดน้อยหรือคลอดก่อนกำหนด","Da el mecanismo y di que aumenta el riesgo de bajo peso al nacer o parto prematuro."] },
+    { q:["Premature birth occurred in 12% of pregnancies where the mother smoked and 6% where she did not. Which conclusion is best supported?","คลอดก่อนกำหนด 12% ในกลุ่มที่แม่สูบบุหรี่ และ 6% ในกลุ่มที่ไม่สูบ ข้อสรุปใดสนับสนุนได้ดีที่สุด?","El parto prematuro ocurrió en el 12 % de los embarazos con madre fumadora y en el 6 % sin fumar. ¿Qué conclusión está mejor respaldada?"],
+      o:[["Smoking always causes premature birth","การสูบบุหรี่ทำให้คลอดก่อนกำหนดเสมอ","Fumar siempre causa parto prematuro"],["Smoking appears to be associated with an increased risk of premature birth","การสูบบุหรี่ดูเหมือนสัมพันธ์กับความเสี่ยงคลอดก่อนกำหนดที่สูงขึ้น","Fumar parece asociarse a un mayor riesgo de parto prematuro"],["Smoking has no effect because most babies were not premature","การสูบบุหรี่ไม่มีผล เพราะทารกส่วนใหญ่ไม่ได้คลอดก่อนกำหนด","Fumar no tiene efecto porque la mayoría de los bebés no nacieron prematuros"],["Every premature birth is caused by smoking","การคลอดก่อนกำหนดทุกกรณีเกิดจากการสูบบุหรี่","Todo parto prematuro se debe a fumar"]],
+      a:1, e:["Use careful words: \"associated with\" and \"increased risk\", not \"always\" or \"proves\".","ใช้คำอย่างระวัง เช่น “สัมพันธ์กับ” และ “เพิ่มความเสี่ยง” ไม่ใช่ “เสมอ” หรือ “พิสูจน์ว่า”","Usa palabras prudentes: «asociado a» y «mayor riesgo», no «siempre» ni «demuestra»."] },
+    { q:["\"Smoking during pregnancy means the baby WILL have a low birth weight.\" Why is this scientifically incorrect?","“การสูบบุหรี่ระหว่างตั้งครรภ์หมายความว่าทารกจะมีน้ำหนักแรกเกิดน้อยแน่นอน” ทำไมจึงผิดทางวิทยาศาสตร์?","«Fumar durante el embarazo significa que el bebé TENDRÁ bajo peso.» ¿Por qué es científicamente incorrecto?"],
+      o:[["It increases the risk but does not guarantee the outcome","เพิ่มความเสี่ยงแต่ไม่ได้รับประกันผลลัพธ์","Aumenta el riesgo pero no garantiza el resultado"],["Smoking has no effect on birth weight","การสูบบุหรี่ไม่มีผลต่อน้ำหนักแรกเกิด","Fumar no afecta al peso al nacer"],["Low birth weight is always caused by diet","น้ำหนักแรกเกิดน้อยเกิดจากอาหารเสมอ","El bajo peso siempre se debe a la dieta"]],
+      a:0, e:["Many babies born to mothers who smoke are not low birth weight, and it can have other causes.","ทารกจำนวนมากที่แม่สูบบุหรี่ไม่ได้มีน้ำหนักแรกเกิดน้อย และอาจมีสาเหตุอื่น","Muchos bebés de madres fumadoras no tienen bajo peso, y puede haber otras causas."] }
+  ]
+});
+LESSONS.push({
+  id: 12, title: ["Risk and evaluating evidence", "ความเสี่ยงและการประเมินหลักฐาน", "Riesgo y evaluación de pruebas"],
+  cards: [
+    [["Claim","ข้อกล่าวอ้าง","Afirmación"],["A statement that someone says is true.","ข้อความที่มีคนบอกว่าเป็นจริง","Una declaración que alguien dice que es verdadera."]],
+    [["Evidence","หลักฐาน","Prueba (evidencia)"],["Information or data used to support or challenge a claim.","ข้อมูลที่ใช้สนับสนุนหรือโต้แย้งข้อกล่าวอ้าง","Información o datos que se usan para apoyar o cuestionar una afirmación."]],
+    [["Conclusion","ข้อสรุป","Conclusión"],["A judgement made after considering the evidence.","การตัดสินหลังพิจารณาหลักฐาน","Un juicio que se hace después de considerar las pruebas."]],
+    [["Correlation (association)","สหสัมพันธ์ (ความสัมพันธ์)","Correlación (asociación)"],["Two variables show a relationship or pattern.","ตัวแปรสองตัวมีความสัมพันธ์หรือรูปแบบร่วมกัน","Dos variables muestran una relación o patrón."]],
+    [["Causation","ความเป็นเหตุเป็นผล","Causalidad"],["Changing one variable directly causes a change in the other. Correlation alone does not prove it.","การเปลี่ยนตัวแปรหนึ่งทำให้อีกตัวเปลี่ยนโดยตรง สหสัมพันธ์อย่างเดียวพิสูจน์ไม่ได้","Cambiar una variable provoca directamente un cambio en la otra. La correlación por sí sola no lo demuestra."]],
+    [["Convincing evidence","หลักฐานที่น่าเชื่อถือ","Pruebas convincentes"],["Larger, comparable samples, repeated findings, fair comparisons and other variables considered.","กลุ่มตัวอย่างใหญ่และเปรียบเทียบได้ ผลซ้ำหลายครั้ง เปรียบเทียบอย่างยุติธรรม และพิจารณาตัวแปรอื่น","Muestras grandes y comparables, resultados repetidos, comparaciones justas y otras variables consideradas."]],
+    [["Sample size","ขนาดกลุ่มตัวอย่าง","Tamaño de la muestra"],["The number of people or cases studied. Bigger, representative samples are usually more reliable.","จำนวนคนหรือกรณีที่ศึกษา กลุ่มใหญ่ที่เป็นตัวแทนที่ดีมักน่าเชื่อถือกว่า","El número de personas o casos estudiados. Las muestras grandes y representativas suelen ser más fiables."]]
+  ],
+  quiz: [
+    { q:["A study finds Group A has a higher rate of Outcome X than Group B. Which is the BEST conclusion?","การศึกษาพบว่ากลุ่ม A มีอัตราผลลัพธ์ X สูงกว่ากลุ่ม B ข้อสรุปใดดีที่สุด?","Un estudio halla que el grupo A tiene una tasa mayor del resultado X que el grupo B. ¿Cuál es la MEJOR conclusión?"],
+      o:[["Factor A definitely caused Outcome X","ปัจจัย A ทำให้เกิดผลลัพธ์ X อย่างแน่นอน","El factor A causó definitivamente el resultado X"],["The data show no relationship","ข้อมูลไม่แสดงความสัมพันธ์","Los datos no muestran relación"],["Factor A is associated with an increased risk of X, but other variables should be considered","ปัจจัย A สัมพันธ์กับความเสี่ยงของ X ที่สูงขึ้น แต่ควรพิจารณาตัวแปรอื่นด้วย","El factor A se asocia con un mayor riesgo de X, pero hay que considerar otras variables"],["Everyone exposed to A will develop X","ทุกคนที่สัมผัส A จะเกิด X","Todos los expuestos a A desarrollarán X"]],
+      a:2, e:["Only this answer avoids overstating certainty and avoids dismissing a real difference.","มีเพียงข้อนี้ที่ไม่พูดเกินจริงและไม่มองข้ามความแตกต่างที่เกิดขึ้นจริง","Solo esta respuesta no exagera la certeza ni descarta una diferencia real."] },
+    { q:["Ice-cream sales and sunburn cases both rise on sunny days. What does this show?","ยอดขายไอศกรีมและผู้ป่วยผิวไหม้แดดเพิ่มขึ้นทั้งคู่ในวันที่แดดจัด นี่แสดงอะไร?","Las ventas de helado y los casos de quemaduras solares suben en los días soleados. ¿Qué muestra esto?"],
+      o:[["Ice cream causes sunburn","ไอศกรีมทำให้ผิวไหม้แดด","El helado causa quemaduras"],["A third variable (sunny weather) affects both","ตัวแปรที่สาม (อากาศแดดจัด) ส่งผลต่อทั้งสอง","Una tercera variable (el sol) afecta a ambas"],["Sunburn causes ice-cream sales","ผิวไหม้แดดทำให้ขายไอศกรีมได้","Las quemaduras causan ventas de helado"]],
+      a:1, e:["Correlation alone does not prove causation.","สหสัมพันธ์อย่างเดียวพิสูจน์ความเป็นเหตุเป็นผลไม่ได้","La correlación por sí sola no demuestra causalidad."] },
+    { q:["\"A study of 300 pregnant women found those who exercised had lower average blood pressure.\" Is this a claim, evidence or a conclusion?","“การศึกษาหญิงตั้งครรภ์ 300 คนพบว่าผู้ที่ออกกำลังกายมีความดันเฉลี่ยต่ำกว่า” เป็นข้อกล่าวอ้าง หลักฐาน หรือข้อสรุป?","«Un estudio con 300 embarazadas halló que las que hacían ejercicio tenían menor presión arterial media.» ¿Es afirmación, prueba o conclusión?"],
+      o:[["Claim","ข้อกล่าวอ้าง","Afirmación"],["Evidence","หลักฐาน","Prueba"],["Conclusion","ข้อสรุป","Conclusión"]],
+      a:1, e:["It is data from a study, so it is evidence.","เป็นข้อมูลจากการศึกษา จึงเป็นหลักฐาน","Son datos de un estudio, así que es una prueba."] },
+    { q:["Which evidence is generally the LEAST convincing?","หลักฐานใดมักน่าเชื่อถือ “น้อยที่สุด”?","¿Qué prueba suele ser la MENOS convincente?"],
+      o:[["Several studies with a similar pattern","การศึกษาหลายชิ้นที่พบรูปแบบคล้ายกัน","Varios estudios con un patrón similar"],["A study of 5,000 people","การศึกษาคน 5,000 คน","Un estudio con 5000 personas"],["One person's experience","ประสบการณ์ของคนเพียงคนเดียว","La experiencia de una sola persona"]],
+      a:2, e:["A single anecdote is the weakest form of evidence.","เรื่องเล่าเพียงกรณีเดียวเป็นหลักฐานที่อ่อนที่สุด","Una anécdota aislada es la prueba más débil."] },
+    { q:["Early labour occurred in 18% (n = 600) of higher-cortisol pregnancies and 9% (n = 600) of typical-cortisol pregnancies. Which is the most careful conclusion?","คลอดก่อนกำหนด 18% (n = 600) ในกลุ่มคอร์ติซอลสูง และ 9% (n = 600) ในกลุ่มปกติ ข้อสรุปใดรอบคอบที่สุด?","El parto temprano ocurrió en el 18 % (n = 600) con cortisol alto y en el 9 % (n = 600) con cortisol típico. ¿Cuál es la conclusión más prudente?"],
+      o:[["The data are consistent with an increased risk, but do not prove cortisol causes early labour","ข้อมูลสอดคล้องกับความเสี่ยงที่สูงขึ้น แต่พิสูจน์ไม่ได้ว่าคอร์ติซอลเป็นสาเหตุ","Los datos son coherentes con un mayor riesgo, pero no prueban que el cortisol cause el parto temprano"],["This proves high cortisol causes early labour","พิสูจน์ว่าคอร์ติซอลสูงทำให้คลอดก่อนกำหนด","Esto demuestra que el cortisol alto causa el parto temprano"],["There is no pattern in the data","ไม่มีรูปแบบในข้อมูล","No hay ningún patrón en los datos"]],
+      a:0, e:["Quote the values (18% vs 9%), describe the pattern, then note the limits.","อ้างค่าตัวเลข (18% เทียบกับ 9%) อธิบายรูปแบบ แล้วบอกข้อจำกัด","Cita los valores (18 % frente a 9 %), describe el patrón y señala los límites."] }
+  ]
+});
+// Put-in-order activities: steps are given in the CORRECT order and shuffled at runtime
+const SEQS = [
+  { lesson:1, title:["The reproduction cycle","วัฏจักรการสืบพันธุ์","El ciclo de la reproducción"], steps:[
+    ["Parent organism(s)","พ่อแม่","Progenitor(es)"],["Produce gametes","สร้างเซลล์สืบพันธุ์","Producen gametos"],["Fertilisation or division","การปฏิสนธิหรือการแบ่งตัว","Fertilización o división"],["New offspring grow","ลูกเจริญเติบโต","Los descendientes crecen"]] },
+  { lesson:3, title:["The journey of a sperm","การเดินทางของอสุจิ","El recorrido de un espermatozoide"], steps:[
+    ["Testes: sperm are made","อัณฑะ: สร้างอสุจิ","Testículos: se fabrican los espermatozoides"],["Sperm duct: sperm are carried","ท่อนำอสุจิ: นำอสุจิไป","Conducto deferente: se transportan"],["Gland: fluid added to make semen","ต่อม: เติมของเหลวเป็นน้ำอสุจิ","Glándula: se añade líquido y se forma el semen"],["Urethra: semen carried through","ท่อปัสสาวะ: น้ำอสุจิไหลผ่าน","Uretra: el semen pasa por ella"],["Leaves the body via the penis","ออกจากร่างกายทางอวัยวะเพศ","Sale del cuerpo por el pene"]] },
+  { lesson:4, title:["The journey of an egg","การเดินทางของไข่","El recorrido de un óvulo"], steps:[
+    ["Ovary: egg is released","รังไข่: ปล่อยไข่","Ovario: se libera el óvulo"],["Oviduct: egg is swept along","ท่อนำไข่: ไข่ถูกพัดพาไป","Oviducto: el óvulo es arrastrado"],["Fertilisation may happen (if sperm is present)","อาจเกิดการปฏิสนธิ (ถ้ามีอสุจิ)","Puede haber fertilización (si hay espermatozoides)"],["Uterus: implants and develops","มดลูก: ฝังตัวและเจริญ","Útero: se implanta y se desarrolla"]] },
+  { lesson:6, title:["The menstrual cycle","รอบเดือน","El ciclo menstrual"], steps:[
+    ["Lining breaks down (menstruation)","เยื่อบุสลาย (ประจำเดือน)","El revestimiento se desprende (menstruación)"],["Lining thickens and egg matures","เยื่อบุหนาขึ้นและไข่เจริญ","El revestimiento se engrosa y madura un óvulo"],["Egg released (ovulation)","ปล่อยไข่ (การตกไข่)","Se libera el óvulo (ovulación)"],["Lining stays thick, ready for pregnancy","เยื่อบุคงความหนา พร้อมตั้งครรภ์","El revestimiento sigue grueso, listo para el embarazo"]] },
+  { lesson:7, title:["From ovulation to early development","จากการตกไข่ถึงพัฒนาการระยะแรก","De la ovulación al desarrollo temprano"], steps:[
+    ["Egg is released","ปล่อยไข่","Se libera el óvulo"],["Sperm enters the vagina","อสุจิเข้าสู่ช่องคลอด","El espermatozoide entra en la vagina"],["Sperm swims towards the egg","อสุจิว่ายไปหาไข่","El espermatozoide nada hacia el óvulo"],["Fertilisation occurs","เกิดการปฏิสนธิ","Ocurre la fertilización"],["Zygote is formed","เกิดไซโกต","Se forma el cigoto"],["First cell divisions","การแบ่งเซลล์ครั้งแรก","Primeras divisiones celulares"]] },
+  { lesson:8, title:["From fertilisation to birth","จากการปฏิสนธิถึงการคลอด","De la fertilización al parto"], steps:[
+    ["Fertilisation occurs","เกิดการปฏิสนธิ","Ocurre la fertilización"],["Zygote is formed","เกิดไซโกต","Se forma el cigoto"],["Embryo forms and implants","เอ็มบริโอก่อตัวและฝังตัว","El embrión se forma y se implanta"],["Foetus develops","ทารกในครรภ์เจริญเติบโต","Se desarrolla el feto"],["Birth","การคลอด","Parto"]] },
+  { lesson:9, title:["Labour and birth","การเจ็บครรภ์และการคลอด","Trabajo de parto y nacimiento"], steps:[
+    ["Contractions begin","เริ่มมีการหดตัว","Empiezan las contracciones"],["Cervix opens","ปากมดลูกเปิด","Se abre el cuello uterino"],["Baby delivered","ทารกคลอด","Nace el bebé"],["Placenta delivered","รกคลอด","Sale la placenta"]] },
+  { lesson:10, title:["From flower to seed","จากดอกไม้สู่เมล็ด","De la flor a la semilla"], steps:[
+    ["Pollen reaches the stigma (pollination)","เรณูถึงยอดเกสรเพศเมีย (การถ่ายเรณู)","El polen llega al estigma (polinización)"],["A pollen tube grows down the style","หลอดเรณูงอกลงผ่านก้านเกสรเพศเมีย","Un tubo polínico crece por el estilo"],["Gamete nuclei fuse in the ovule (fertilisation)","นิวเคลียสของเซลล์สืบพันธุ์รวมกันในออวุล (การปฏิสนธิ)","Los núcleos de los gametos se fusionan en el óvulo (fertilización)"],["The fertilised ovule becomes a seed","ออวุลที่ปฏิสนธิแล้วกลายเป็นเมล็ด","El óvulo fecundado se convierte en semilla"]] },
+  { lesson:11, title:["How smoking can affect a foetus","การสูบบุหรี่อาจส่งผลต่อทารกอย่างไร","Cómo puede afectar fumar al feto"], steps:[
+    ["Smoke contains carbon monoxide and nicotine","ควันบุหรี่มีคาร์บอนมอนอกไซด์และนิโคติน","El humo contiene monóxido de carbono y nicotina"],["Less oxygen carried, less blood flow through the placenta","ออกซิเจนถูกขนส่งน้อยลง เลือดไหลผ่านรกน้อยลง","Menos oxígeno transportado y menos flujo por la placenta"],["Less oxygen and fewer nutrients reach the foetus","ออกซิเจนและสารอาหารถึงทารกน้อยลง","Llegan menos oxígeno y nutrientes al feto"],["Higher risk of low birth weight or premature birth","เสี่ยงน้ำหนักแรกเกิดน้อยหรือคลอดก่อนกำหนดสูงขึ้น","Mayor riesgo de bajo peso o parto prematuro"]] }
+];
+
+// Match-it activities: pairs of [left, right]
+const MATCHES = [
+  { lesson:2, title:["Sperm adaptations","การปรับตัวของอสุจิ","Adaptaciones del espermatozoide"], pairs:[
+    [["Head (acrosome)","หัว (อะโครโซม)","Cabeza (acrosoma)"],["Enzymes digest through the egg's jelly coat","เอนไซม์ย่อยผ่านเปลือกวุ้นของไข่","Las enzimas digieren la cubierta gelatinosa del óvulo"]],
+    [["Midpiece","ส่วนกลางลำตัว","Pieza media"],["Packed with mitochondria to release energy","อัดแน่นด้วยไมโทคอนเดรียเพื่อปล่อยพลังงาน","Llena de mitocondrias para liberar energía"]],
+    [["Tail","หาง","Cola"],["Propels the sperm towards the egg","ผลักอสุจิไปหาไข่","Impulsa al espermatozoide hacia el óvulo"]],
+    [["Millions released","ปล่อยหลายล้านตัว","Millones liberados"],["Increases the chance one reaches the egg","เพิ่มโอกาสที่จะมีอย่างน้อยหนึ่งตัวถึงไข่","Aumenta la probabilidad de que llegue uno al óvulo"]] ] },
+  { lesson:3, title:["Male reproductive organs","อวัยวะสืบพันธุ์เพศชาย","Órganos reproductores masculinos"], pairs:[
+    [["Testes","อัณฑะ","Testículos"],["Produce sperm cells","ผลิตเซลล์อสุจิ","Producen espermatozoides"]],
+    [["Scrotum","ถุงอัณฑะ","Escroto"],["Holds the testes outside the body","ห่อหุ้มอัณฑะไว้นอกร่างกาย","Mantiene los testículos fuera del cuerpo"]],
+    [["Sperm duct","ท่อนำอสุจิ","Conducto deferente"],["Carries sperm towards the urethra","นำอสุจิไปยังท่อปัสสาวะ","Lleva los espermatozoides hacia la uretra"]],
+    [["Gland","ต่อม","Glándula"],["Adds fluid to make semen","เติมของเหลวเพื่อสร้างน้ำอสุจิ","Añade líquido para formar el semen"]],
+    [["Urethra","ท่อปัสสาวะ","Uretra"],["Carries semen out of the body","นำน้ำอสุจิออกจากร่างกาย","Lleva el semen fuera del cuerpo"]],
+    [["Penis","อวัยวะเพศชาย","Pene"],["Passes semen into the female body","ส่งน้ำอสุจิเข้าสู่ร่างกายเพศหญิง","Introduce el semen en el cuerpo femenino"]] ] },
+  { lesson:4, title:["Female reproductive organs","อวัยวะสืบพันธุ์เพศหญิง","Órganos reproductores femeninos"], pairs:[
+    [["Ovary","รังไข่","Ovario"],["Releases eggs and female hormones","ปล่อยไข่และฮอร์โมนเพศหญิง","Libera óvulos y hormonas femeninas"]],
+    [["Oviduct","ท่อนำไข่","Oviducto"],["Carries the egg; site of fertilisation","นำไข่ไป เป็นที่เกิดการปฏิสนธิ","Lleva el óvulo; lugar de la fertilización"]],
+    [["Uterus","มดลูก","Útero"],["Where a fertilised egg develops into a baby","ที่ซึ่งไข่ที่ปฏิสนธิแล้วเจริญเป็นทารก","Donde el óvulo fecundado se desarrolla hasta ser un bebé"]],
+    [["Cervix","ปากมดลูก","Cuello uterino"],["Ring of muscle between uterus and vagina","วงแหวนกล้ามเนื้อระหว่างมดลูกกับช่องคลอด","Anillo de músculo entre útero y vagina"]],
+    [["Vagina","ช่องคลอด","Vagina"],["Muscular tube to the outside of the body","ท่อกล้ามเนื้อที่ต่อสู่ภายนอกร่างกาย","Tubo muscular hacia el exterior del cuerpo"]] ] },
+  { lesson:8, title:["Pregnancy structures","โครงสร้างที่เกี่ยวข้องกับการตั้งครรภ์","Estructuras del embarazo"], pairs:[
+    [["Placenta","รก","Placenta"],["Exchanges oxygen, nutrients and waste by diffusion","แลกเปลี่ยนออกซิเจน สารอาหาร และของเสียโดยการแพร่","Intercambia oxígeno, nutrientes y desechos por difusión"]],
+    [["Umbilical cord","สายสะดือ","Cordón umbilical"],["Links the foetus to the placenta","เชื่อมทารกกับรก","Une el feto con la placenta"]],
+    [["Uterus","มดลูก","Útero"],["Protects and houses the baby; pushes it out at birth","ปกป้องและเป็นที่อยู่ของทารก ดันทารกออกตอนคลอด","Protege y aloja al bebé; lo expulsa en el parto"]],
+    [["Implantation","การฝังตัว","Implantación"],["Embryo embeds into the uterus lining","เอ็มบริโอฝังตัวในเยื่อบุมดลูก","El embrión se incrusta en el revestimiento del útero"]] ] },
+  { lesson:10, title:["Parts of a flower","ส่วนต่าง ๆ ของดอกไม้","Partes de una flor"], pairs:[
+    [["Anther","อับเรณู","Antera"],["Produces pollen (male)","ผลิตเรณู (เพศผู้)","Produce polen (masculino)"]],
+    [["Filament","ก้านชูอับเรณู","Filamento"],["Holds the anther up","ชูอับเรณูขึ้น","Sostiene la antera"]],
+    [["Stigma","ยอดเกสรเพศเมีย","Estigma"],["Sticky surface that receives pollen","พื้นผิวเหนียวที่รับเรณู","Superficie pegajosa que recibe el polen"]],
+    [["Style","ก้านเกสรเพศเมีย","Estilo"],["Connects stigma to ovary","เชื่อมยอดเกสรเพศเมียกับรังไข่","Conecta el estigma con el ovario"]],
+    [["Ovule","ออวุล","Óvulo vegetal"],["Contains the female gamete","มีเซลล์สืบพันธุ์เพศเมีย","Contiene el gameto femenino"]] ] }
+];
+
+// Exam practice: question, marks, mark-scheme points (self-mark)
+const EXAMS = [
+  { lesson:2, marks:2, q:["Explain why sperm cells contain many mitochondria.","จงอธิบายว่าทำไมเซลล์อสุจิจึงมีไมโทคอนเดรียจำนวนมาก","Explica por qué los espermatozoides contienen muchas mitocondrias."],
+    pts:[["Mitochondria release energy","ไมโทคอนเดรียปล่อยพลังงาน","Las mitocondrias liberan energía"],["…which is needed for the tail to move / for the sperm to swim to the egg","…ซึ่งจำเป็นให้หางเคลื่อนไหว / ให้อสุจิว่ายไปหาไข่","…que se necesita para que la cola se mueva / para que el espermatozoide nade hasta el óvulo"]],
+    kw:["mitochondria","energy","tail","swim","fertilise"] },
+  { lesson:3, marks:2, q:["Explain why the testes are located outside the main body.","จงอธิบายว่าทำไมอัณฑะจึงอยู่นอกลำตัวหลัก","Explica por qué los testículos están fuera del cuerpo."],
+    pts:[["Sperm production works best at a temperature lower than normal body temperature","การผลิตอสุจิทำงานได้ดีที่สุดที่อุณหภูมิต่ำกว่าอุณหภูมิร่างกายปกติ","La producción de espermatozoides funciona mejor a una temperatura inferior a la corporal normal"],["The scrotum holds the testes outside, keeping them cooler / able to move closer to or further from the body","ถุงอัณฑะห่อหุ้มอัณฑะไว้ภายนอกทำให้เย็นกว่า / ขยับเข้าใกล้หรือห่างจากลำตัวได้","El escroto mantiene los testículos fuera, más fríos / pueden acercarse o alejarse del cuerpo"]],
+    kw:["temperature","sperm production","scrotum","cooler","37°C"] },
+  { lesson:4, marks:2, q:["Explain why the uterus has a thick, muscular lining.","จงอธิบายว่าทำไมมดลูกจึงมีผนังกล้ามเนื้อและเยื่อบุที่หนา","Explica por qué el útero tiene una pared muscular y un revestimiento gruesos."],
+    pts:[["The muscular wall stretches as the foetus grows and contracts to push the baby out at birth","ผนังกล้ามเนื้อยืดขยายเมื่อทารกโตและหดตัวดันทารกออกตอนคลอด","La pared muscular se estira cuando crece el feto y se contrae para expulsar al bebé en el parto"],["The thick lining has a rich blood supply, giving nutrients and oxygen to the embryo/foetus after implantation","เยื่อบุที่หนามีเลือดมาเลี้ยงมาก ให้สารอาหารและออกซิเจนแก่เอ็มบริโอ/ทารกหลังฝังตัว","El revestimiento grueso tiene mucho riego sanguíneo y da nutrientes y oxígeno al embrión/feto tras la implantación"]],
+    kw:["muscular","stretch","contract","lining","blood vessels","nutrients","implant","foetus"] },
+  { lesson:5, marks:2, q:["Explain how hormones help the body prepare for adulthood.","จงอธิบายว่าฮอร์โมนช่วยให้ร่างกายเตรียมพร้อมสู่วัยผู้ใหญ่อย่างไร","Explica cómo ayudan las hormonas al cuerpo a prepararse para la edad adulta."],
+    pts:[["Hormones are chemical messengers, made in the body and carried in the blood, that trigger changes","ฮอร์โมนเป็นสารส่งสัญญาณ สร้างในร่างกายและเดินทางในเลือด กระตุ้นให้เกิดการเปลี่ยนแปลง","Las hormonas son mensajeros químicos, fabricados en el cuerpo y transportados por la sangre, que desencadenan cambios"],["These changes prepare the body physically and emotionally for adult life, including the potential to reproduce","การเปลี่ยนแปลงเหล่านี้เตรียมร่างกายทั้งทางกายและอารมณ์สำหรับชีวิตผู้ใหญ่ รวมถึงความสามารถในการสืบพันธุ์","Estos cambios preparan el cuerpo física y emocionalmente para la vida adulta, incluida la capacidad de reproducirse"]],
+    kw:["hormone","chemical messenger","blood","trigger","physical","emotional","gradual","reproduction"] },
+  { lesson:6, marks:2, q:["Explain why the lining of the uterus becomes thicker during the menstrual cycle.","จงอธิบายว่าทำไมเยื่อบุมดลูกจึงหนาขึ้นในระหว่างรอบเดือน","Explica por qué el revestimiento del útero se engrosa durante el ciclo menstrual."],
+    pts:[["It thickens to prepare for a possible pregnancy / in case the egg is fertilised","หนาขึ้นเพื่อเตรียมพร้อมสำหรับการตั้งครรภ์ที่อาจเกิดขึ้น / เผื่อไข่ถูกปฏิสนธิ","Se engrosa para prepararse para un posible embarazo / por si el óvulo es fecundado"],["A thick lining can support a fertilised egg and provide nutrients so it can implant and develop","เยื่อบุที่หนารองรับไข่ที่ปฏิสนธิและให้สารอาหารเพื่อให้ฝังตัวและเจริญ","Un revestimiento grueso puede sostener un óvulo fecundado y darle nutrientes para que se implante y se desarrolle"]],
+    kw:["uterus lining","thicken","prepare","fertilised egg","implant","pregnancy"] },
+  { lesson:7, marks:3, q:["Explain what happens during fertilisation.","จงอธิบายว่าเกิดอะไรขึ้นระหว่างการปฏิสนธิ","Explica qué ocurre durante la fertilización."],
+    pts:[["A sperm cell fuses with / enters an egg cell, usually in the oviduct","เซลล์อสุจิรวมกับ/เข้าไปในเซลล์ไข่ โดยมักเกิดในท่อนำไข่","Un espermatozoide se fusiona con un óvulo / entra en él, normalmente en el oviducto"],["The nuclei of the sperm and egg fuse together","นิวเคลียสของอสุจิและไข่หลอมรวมกัน","Los núcleos del espermatozoide y del óvulo se fusionan"],["This combines genetic information from both parents to form a new cell called a zygote","ทำให้ข้อมูลพันธุกรรมจากพ่อแม่ทั้งสองรวมกันเป็นเซลล์ใหม่ที่เรียกว่าไซโกต","Combina la información genética de ambos progenitores y forma una célula nueva llamada cigoto"]],
+    kw:["sperm","egg","nucleus","fuse","zygote","oviduct","genetic information"] },
+  { lesson:8, marks:3, q:["Explain the role of the placenta during pregnancy.","จงอธิบายบทบาทของรกในระหว่างการตั้งครรภ์","Explica la función de la placenta durante el embarazo."],
+    pts:[["It is the site of exchange between the mother's and the foetus's blood","เป็นที่แลกเปลี่ยนสารระหว่างเลือดของแม่และทารก","Es el lugar de intercambio entre la sangre de la madre y la del feto"],["Oxygen and nutrients diffuse from the mother's blood and reach the foetus via the umbilical cord","ออกซิเจนและสารอาหารแพร่จากเลือดแม่และไปถึงทารกทางสายสะดือ","El oxígeno y los nutrientes se difunden desde la sangre de la madre y llegan al feto por el cordón umbilical"],["Carbon dioxide and other waste diffuse from the foetus into the mother's blood to be removed","คาร์บอนไดออกไซด์และของเสียอื่นแพร่จากทารกเข้าสู่เลือดแม่เพื่อกำจัดออก","El dióxido de carbono y otros desechos se difunden del feto a la sangre de la madre para eliminarse"]],
+    kw:["placenta","umbilical cord","diffuse","oxygen","nutrients","waste products"] },
+  { lesson:9, marks:3, q:["Explain how contractions help during birth.","จงอธิบายว่าการหดตัวของมดลูกช่วยในการคลอดอย่างไร","Explica cómo ayudan las contracciones durante el parto."],
+    pts:[["Contractions are the rhythmic tightening and relaxing of the muscles of the uterus wall","การหดตัวคือการบีบและคลายตัวเป็นจังหวะของกล้ามเนื้อผนังมดลูก","Las contracciones son la contracción y relajación rítmicas de los músculos de la pared del útero"],["They gradually dilate the cervix, from closed to about 10 cm","ทำให้ปากมดลูกค่อย ๆ เปิดจากปิดจนถึงประมาณ 10 ซม.","Dilatan poco a poco el cuello uterino, de cerrado a unos 10 cm"],["They push the baby down through the cervix and out through the birth canal","ดันทารกลงผ่านปากมดลูกและออกทางช่องทางคลอด","Empujan al bebé por el cuello uterino y fuera por el canal del parto"]],
+    kw:["contractions","uterus","cervix","dilate","birth canal","muscles"] },
+  { lesson:10, marks:4, q:["Explain how a flowering plant reproduces sexually.","จงอธิบายว่าพืชดอกสืบพันธุ์แบบอาศัยเพศอย่างไร","Explica cómo se reproduce sexualmente una planta con flor."],
+    pts:[["Pollen (with the male gamete) is transferred from the anther to the stigma: pollination","เรณู (มีเซลล์สืบพันธุ์เพศผู้) ถูกส่งจากอับเรณูไปยังยอดเกสรเพศเมีย: การถ่ายเรณู","El polen (con el gameto masculino) pasa de la antera al estigma: polinización"],["A pollen tube grows down the style to an ovule in the ovary","หลอดเรณูงอกลงผ่านก้านเกสรเพศเมียไปยังออวุลในรังไข่","Un tubo polínico crece por el estilo hasta un óvulo del ovario"],["The male gamete nucleus fuses with the female gamete nucleus in the ovule: fertilisation","นิวเคลียสเซลล์เพศผู้รวมกับนิวเคลียสเซลล์เพศเมียในออวุล: การปฏิสนธิ","El núcleo del gameto masculino se fusiona con el del femenino en el óvulo: fertilización"],["The fertilised ovule develops into a seed","ออวุลที่ปฏิสนธิแล้วเจริญเป็นเมล็ด","El óvulo fecundado se convierte en semilla"]],
+    kw:["pollen","anther","stigma","pollination","ovule","fertilisation","seed"] },
+  { lesson:11, marks:3, q:["Explain why smoking during pregnancy may affect the development of a foetus.","จงอธิบายว่าทำไมการสูบบุหรี่ระหว่างตั้งครรภ์อาจส่งผลต่อพัฒนาการของทารกในครรภ์","Explica por qué fumar durante el embarazo puede afectar al desarrollo del feto."],
+    pts:[["Carbon monoxide reduces the oxygen the blood can carry, and/or nicotine reduces blood flow through the placenta","คาร์บอนมอนอกไซด์ลดออกซิเจนที่เลือดขนส่งได้ และ/หรือ นิโคตินลดการไหลของเลือดผ่านรก","El monóxido de carbono reduce el oxígeno que transporta la sangre y/o la nicotina reduce el flujo por la placenta"],["So less oxygen and/or fewer nutrients reach the foetus","ดังนั้นออกซิเจนและ/หรือสารอาหารถึงทารกน้อยลง","Así llegan menos oxígeno y/o nutrientes al feto"],["This may affect development and increases the risk of low birth weight or premature birth","อาจส่งผลต่อพัฒนาการและเพิ่มความเสี่ยงน้ำหนักแรกเกิดน้อยหรือคลอดก่อนกำหนด","Puede afectar al desarrollo y aumenta el riesgo de bajo peso o parto prematuro"]],
+    kw:["carbon monoxide","nicotine","oxygen","placenta","foetus","risk","development"] },
+  { lesson:12, marks:4, q:["Early labour occurred in 18% of pregnancies with higher cortisol (n = 600) and 9% with typical cortisol (n = 600). A student concludes that high cortisol increases the risk of early labour. Evaluate whether the evidence supports this.","การคลอดก่อนกำหนดเกิดขึ้น 18% ในกลุ่มคอร์ติซอลสูง (n = 600) และ 9% ในกลุ่มปกติ (n = 600) นักเรียนสรุปว่าคอร์ติซอลสูงเพิ่มความเสี่ยงคลอดก่อนกำหนด จงประเมินว่าหลักฐานสนับสนุนหรือไม่","El parto temprano ocurrió en el 18 % de los embarazos con cortisol alto (n = 600) y en el 9 % con cortisol típico (n = 600). Un estudiante concluye que el cortisol alto aumenta el riesgo de parto temprano. Evalúa si las pruebas lo respaldan."],
+    pts:[["Quote the data correctly: 18% vs 9%","อ้างข้อมูลถูกต้อง: 18% เทียบกับ 9%","Cita bien los datos: 18 % frente a 9 %"],["Describe the pattern: early labour is more common in the higher-cortisol group","อธิบายรูปแบบ: คลอดก่อนกำหนดพบมากกว่าในกลุ่มคอร์ติซอลสูง","Describe el patrón: el parto temprano es más frecuente en el grupo con cortisol alto"],["Give a limitation: one dataset, other variables not described, or association not proven causation","บอกข้อจำกัด: ข้อมูลชุดเดียว ไม่ได้อธิบายตัวแปรอื่น หรือเป็นเพียงความสัมพันธ์ ไม่ได้พิสูจน์เหตุและผล","Da una limitación: un solo conjunto de datos, no se describen otras variables, o es asociación y no causalidad demostrada"],["Reach a justified conclusion: consistent with increased risk, but does not prove cortisol causes early labour","สรุปอย่างมีเหตุผล: สอดคล้องกับความเสี่ยงที่สูงขึ้น แต่พิสูจน์ไม่ได้ว่าคอร์ติซอลเป็นสาเหตุ","Llega a una conclusión justificada: coherente con mayor riesgo, pero no prueba que el cortisol cause el parto temprano"]],
+    kw:["data","pattern","cortisol","risk","correlation","variable","conclusion","sample size"] }
+];
+// ---------- state ----------
+const KEY = 'hr-revision-v1';
+let store = { lang: { th: true, es: true }, cards: {}, quiz: {}, seq: {}, match: {} };
+try { const s = localStorage.getItem(KEY); if (s) { const p = JSON.parse(s); store = Object.assign(store, p); store.lang = Object.assign({ th: true, es: true }, p.lang); } } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+
+const S = { tab: 'cards', lesson: 'all', ci: 0, flipped: false, onlyLearning: false, shuffled: false, rank: {},
+  quiz: null, seq: {}, match: {}, exam: {}, confirmReset: false };
+
+const TABS = [['cards', 'Flashcards'], ['quiz', 'Quiz'], ['order', 'Put in order'], ['match', 'Match up'], ['exam', 'Exam practice']];
+const UI = { // interface words are kept short and English only; content carries the translations
+};
+
+// ---------- helpers ----------
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $ = (s, r = document) => r.querySelector(s);
+const inSel = id => S.lesson === 'all' || S.lesson === id;
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+function tx(a, cls) {
+  let h = `<span class="en">${a[0]}</span>`;
+  if (store.lang.th) h += `<span class="tr th" lang="th"><i>TH</i>${a[1]}</span>`;
+  if (store.lang.es) h += `<span class="tr es" lang="es"><i>ES</i>${a[2]}</span>`;
+  return `<span class="tx ${cls || ''}">${h}</span>`;
+}
+const lessonById = id => LESSONS.find(l => l.id === id);
+const nCards = LESSONS.reduce((n, l) => n + l.cards.length, 0);
+const nQuiz = LESSONS.reduce((n, l) => n + l.quiz.length, 0);
+const count = o => Object.keys(o).length;
+
+// ---------- chrome ----------
+function chrome() {
+  return `<div class="bar"><div class="bar-in">
+    <div class="top">
+      <div><h1>Human Reproduction Revision</h1><small>Year 9 Biology · Lessons 1–12</small></div>
+      <div class="langs" role="group" aria-label="Translations">
+        <span class="lbl">Show under English:</span>
+        <button class="pill" data-a="lang" data-l="th" aria-pressed="${store.lang.th}">ไทย</button>
+        <button class="pill" data-a="lang" data-l="es" aria-pressed="${store.lang.es}">Español</button>
+      </div>
+    </div>
+    <div class="progress" aria-label="Your progress">
+      <span>Cards known <b>${count(store.cards)}/${nCards}</b></span>
+      <span>Quiz answers right <b>${count(store.quiz)}/${nQuiz}</b></span>
+      <span>Orders solved <b>${count(store.seq)}/${SEQS.length}</b></span>
+      <span>Matches solved <b>${count(store.match)}/${MATCHES.length}</b></span>
+    </div>
+    <div class="chips" role="group" aria-label="Choose a lesson">
+      <button class="chip all" data-a="lesson" data-v="all" aria-pressed="${S.lesson === 'all'}">All</button>
+      ${LESSONS.map(l => `<button class="chip" data-a="lesson" data-v="${l.id}" title="${l.title[0]}" aria-label="Lesson ${l.id}: ${l.title[0]}" aria-pressed="${S.lesson === l.id}">${l.id}</button>`).join('')}
+    </div>
+    <div class="tabs" role="tablist">
+      ${TABS.map(t => `<button class="tab" role="tab" data-a="tab" data-v="${t[0]}" aria-selected="${S.tab === t[0]}">${t[1]}</button>`).join('')}
+    </div>
+  </div></div>`;
+}
+function lessonHead() {
+  if (S.lesson === 'all') return `<div class="lessonhead"><div class="k">All lessons</div><h2>Lessons 1 to 12</h2></div>`;
+  const l = lessonById(S.lesson);
+  return `<div class="lessonhead"><div class="k">Lesson ${l.id}</div><h2>${tx(l.title)}</h2></div>`;
+}
+
+// ---------- flashcards ----------
+function deck() {
+  let d = [];
+  LESSONS.forEach(L => { if (inSel(L.id)) L.cards.forEach((c, i) => d.push({ key: L.id + '-' + i, lesson: L.id, term: c[0], def: c[1] })); });
+  if (S.onlyLearning) d = d.filter(c => !store.cards[c.key]);
+  if (S.shuffled) d.sort((a, b) => (S.rank[a.key] ?? (S.rank[a.key] = Math.random())) - (S.rank[b.key] ?? (S.rank[b.key] = Math.random())));
+  return d;
+}
+function viewCards() {
+  const d = deck();
+  const tools = `<div class="row">
+      <button class="pill" data-a="shuffle" aria-pressed="${S.shuffled}">Shuffle</button>
+      <button class="pill" data-a="learning" aria-pressed="${S.onlyLearning}">Only cards I'm still learning</button></div>`;
+  if (!d.length) return `<div class="stack">${tools}<div class="panel empty">${S.onlyLearning ? 'You have marked every card in this set as known. Turn off the filter to go through them again.' : 'No cards here.'}</div></div>`;
+  if (S.ci >= d.length) S.ci = d.length - 1;
+  const c = d[S.ci];
+  const known = !!store.cards[c.key];
+  return `<div class="stack">${tools}
+    <div class="meta"><span>Card ${S.ci + 1} of ${d.length}${S.lesson === 'all' ? ' · Lesson ' + c.lesson : ''}</span><span>${known ? 'Marked as known' : ''}</span></div>
+    <div class="bartrack"><div style="width:${((S.ci + 1) / d.length) * 100}%"></div></div>
+    <button class="flash ${S.flipped ? 'back' : ''}" data-a="flip" aria-label="Flip card">
+      <span class="side">${S.flipped ? 'Meaning' : 'Key word'}</span>
+      ${S.flipped ? `<span class="def">${tx(c.def)}</span>` : tx(c.term, 'term')}
+    </button>
+    <div class="hint">Tap the card to flip it</div>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn" data-a="prev" ${S.ci === 0 ? 'disabled' : ''}>Back</button>
+      <span class="row"><button class="btn bad" data-a="learn">Still learning</button><button class="btn good" data-a="known">Got it</button></span>
+      <button class="btn" data-a="next" ${S.ci >= d.length - 1 ? 'disabled' : ''}>Next</button>
+    </div></div>`;
+}
+
+// ---------- quiz ----------
+function startQuiz(onlyIds) {
+  const list = [];
+  LESSONS.forEach(L => { if (inSel(L.id)) L.quiz.forEach((q, i) => {
+    const id = L.id + '-q' + i;
+    if (onlyIds && !onlyIds.includes(id)) return;
+    const idx = q.o.map((_, k) => k);
+    list.push({ id, L: L.id, q, order: q.o.length === 2 ? idx : shuffle(idx) });
+  }); });
+  S.quiz = { list: shuffle(list), i: 0, picked: null, score: 0, missed: [], done: false, lesson: S.lesson };
+}
+function viewQuiz() {
+  if (!S.quiz || S.quiz.lesson !== S.lesson) startQuiz();
+  const Q = S.quiz;
+  if (!Q.list.length) return `<div class="panel empty">No questions here.</div>`;
+  if (Q.done) {
+    return `<div class="panel stack"><div class="meta"><span>Finished</span></div>
+      <div class="score">${Q.score} / ${Q.list.length}</div>
+      <div>${Q.score === Q.list.length ? 'Full marks. Try another lesson or the exam questions.' : Q.missed.length + ' to look at again.'}</div>
+      <div class="row"><button class="btn primary" data-a="qrestart">Start again</button>
+      ${Q.missed.length ? `<button class="btn" data-a="qmissed">Retry the ${Q.missed.length} I got wrong</button>` : ''}</div></div>`;
+  }
+  const cur = Q.list[Q.i];
+  const ans = Q.picked !== null;
+  const opts = cur.order.map(k => {
+    let cls = 'opt';
+    if (ans) { if (k === cur.q.a) cls += ' right'; else if (k === Q.picked) cls += ' wrong'; }
+    return `<button class="${cls}" data-a="pick" data-k="${k}" ${ans ? 'disabled' : ''}>${tx(cur.q.o[k])}</button>`;
+  }).join('');
+  const ok = ans && Q.picked === cur.q.a;
+  return `<div class="stack">
+    <div class="meta"><span>Question ${Q.i + 1} of ${Q.list.length}${S.lesson === 'all' ? ' · Lesson ' + cur.L : ''}</span><span>Score ${Q.score}</span></div>
+    <div class="bartrack"><div style="width:${(Q.i / Q.list.length) * 100}%"></div></div>
+    <div class="panel"><div class="q">${tx(cur.q.q)}</div><div class="opts">${opts}</div>
+      ${ans ? `<div class="expl"><b>${ok ? 'Correct' : 'Not quite'}</b>${tx(cur.q.e)}</div>` : ''}</div>
+    ${ans ? `<div><button class="btn primary" data-a="qnext">${Q.i + 1 >= Q.list.length ? 'See my score' : 'Next question'}</button></div>` : ''}
+  </div>`;
+}
+
+// ---------- put in order ----------
+function seqState(i) {
+  const k = 'seq' + i;
+  if (!S.seq[k]) S.seq[k] = { pool: shuffle(SEQS[i].steps.map((_, n) => n)), placed: [], checked: false };
+  return S.seq[k];
+}
+function viewOrder() {
+  const items = SEQS.map((s, i) => ({ s, i })).filter(x => inSel(x.s.lesson));
+  if (!items.length) return `<div class="panel empty">There is no ordering activity for this lesson. Choose another lesson, or All.</div>`;
+  return `<div class="stack">${items.map(({ s, i }) => {
+    const st = seqState(i);
+    const complete = st.placed.length === s.steps.length;
+    const solved = !!store.seq[i];
+    const pool = st.pool.filter(n => !st.placed.includes(n));
+    let note = '';
+    if (st.checked) {
+      const right = st.placed.every((n, p) => n === p);
+      note = right ? `<div class="note good">Correct order.</div>` : `<div class="note bad">${st.placed.filter((n, p) => n === p).length} of ${s.steps.length} in the right place. Tap a step to take it out and try again.</div>`;
+    }
+    return `<section class="panel"><div class="acthead"><h3>${tx(s.title)}</h3>${solved ? '<span class="done-tag">Solved</span>' : `<span class="meta">Lesson ${s.lesson}</span>`}</div>
+      <div class="cols">
+        <div><h4>Steps to sort</h4><div class="list">${pool.map(n => `<button class="item" data-a="place" data-i="${i}" data-n="${n}">${tx(s.steps[n])}</button>`).join('') || '<div class="slot">All steps placed</div>'}</div></div>
+        <div><h4>Your order</h4><div class="list">${st.placed.map((n, p) => {
+          let c = 'item placed'; if (st.checked) c += n === p ? ' right' : ' wrong';
+          return `<button class="${c}" data-a="unplace" data-i="${i}" data-n="${n}"><span class="n">${p + 1}.</span>${tx(s.steps[n])}</button>`; }).join('') || '<div class="slot">Tap the steps in the order they happen</div>'}</div></div>
+      </div>
+      ${note}
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" data-a="checkseq" data-i="${i}" ${complete ? '' : 'disabled'}>Check order</button>
+        <button class="btn" data-a="resetseq" data-i="${i}">Shuffle and restart</button></div></section>`;
+  }).join('')}</div>`;
+}
+
+// ---------- match up ----------
+function matchState(i) {
+  const k = 'm' + i;
+  if (!S.match[k]) S.match[k] = { right: shuffle(MATCHES[i].pairs.map((_, n) => n)), sel: null, done: [], wrong: 0, flash: null };
+  return S.match[k];
+}
+function viewMatch() {
+  const items = MATCHES.map((m, i) => ({ m, i })).filter(x => inSel(x.m.lesson));
+  if (!items.length) return `<div class="panel empty">There is no matching activity for this lesson. Choose another lesson, or All.</div>`;
+  return `<div class="stack">${items.map(({ m, i }) => {
+    const st = matchState(i);
+    const all = st.done.length === m.pairs.length;
+    return `<section class="panel"><div class="acthead"><h3>${tx(m.title)}</h3>${all ? '<span class="done-tag">Solved</span>' : `<span class="meta">Lesson ${m.lesson}</span>`}</div>
+      <div class="cols">
+        <div><h4>Tap one here</h4><div class="list">${m.pairs.map((p, n) => {
+          const d = st.done.includes(n);
+          return `<button class="item ${d ? 'matched' : ''} ${st.sel === n ? 'sel' : ''}" data-a="mleft" data-i="${i}" data-n="${n}" ${d ? 'disabled' : ''}>${tx(p[0])}</button>`; }).join('')}</div></div>
+        <div><h4>Then its match</h4><div class="list">${st.right.map(n => {
+          const d = st.done.includes(n);
+          const f = st.flash === n ? ' wrong' : '';
+          return `<button class="item ${d ? 'matched' : ''}${f}" data-a="mright" data-i="${i}" data-n="${n}" ${d ? 'disabled' : ''}>${tx(m.pairs[n][1])}</button>`; }).join('')}</div></div>
+      </div>
+      <div class="note ${all ? 'good' : ''}">${all ? `All matched with ${st.wrong} wrong ${st.wrong === 1 ? 'try' : 'tries'}.` : `${st.done.length} of ${m.pairs.length} matched · ${st.wrong} wrong ${st.wrong === 1 ? 'try' : 'tries'}`}</div>
+      ${all ? `<div class="row" style="margin-top:12px"><button class="btn" data-a="resetmatch" data-i="${i}">Play again</button></div>` : ''}</section>`;
+  }).join('')}</div>`;
+}
+
+// ---------- exam ----------
+function viewExam() {
+  const items = EXAMS.map((e, i) => ({ e, i })).filter(x => inSel(x.e.lesson));
+  if (!items.length) return `<div class="panel empty">There is no exam question for this lesson. Choose another lesson, or All.</div>`;
+  return `<div class="stack">${items.map(({ e, i }) => {
+    const st = S.exam[i] || (S.exam[i] = { open: false, ticks: [], text: '' });
+    const got = st.ticks.filter(Boolean).length;
+    return `<section class="panel"><div class="acthead"><span class="meta">Lesson ${e.lesson}</span><span class="marks">${e.marks} marks</span></div>
+      <div class="q" style="margin-top:8px">${tx(e.q)}</div>
+      <div class="kw" aria-label="Key words to use">${e.kw.map(k => `<span>${k}</span>`).join('')}</div>
+      <textarea id="ans${i}" data-a="text" data-i="${i}" placeholder="Write your answer here, or in your book. Use the key words above.">${esc(st.text)}</textarea>
+      ${st.open ? `<div class="note"><b>Mark scheme.</b> Tick each point you made. Your answer needs the idea, not the exact words.</div>
+        <div class="pts">${e.pts.map((p, n) => `<label class="pt ${st.ticks[n] ? 'on' : ''}"><input type="checkbox" data-a="tick" data-i="${i}" data-n="${n}" ${st.ticks[n] ? 'checked' : ''}><span>${tx(p)}</span></label>`).join('')}</div>
+        <div class="note ${got === e.marks ? 'good' : ''}">You gave yourself ${got} out of ${e.marks}.</div>
+        <div class="row" style="margin-top:8px"><button class="btn" data-a="hide" data-i="${i}">Hide mark scheme</button></div>`
+      : `<div class="row" style="margin-top:12px"><button class="btn primary" data-a="show" data-i="${i}">Show mark scheme</button></div>`}
+    </section>`;
+  }).join('')}</div>`;
+}
+
+// ---------- render ----------
+function render() {
+  const y = window.scrollY;
+  const view = { cards: viewCards, quiz: viewQuiz, order: viewOrder, match: viewMatch, exam: viewExam }[S.tab]();
+  $('#app').innerHTML = `${chrome()}<div class="wrap"><main>${lessonHead()}${view}
+    <div class="foot"><span>Based on lessons 1 to 12 of the Year 9 Human Reproduction unit.</span>
+    ${S.confirmReset ? `<span class="row"><span>Reset all saved progress?</span><button class="btn bad" data-a="reset">Yes, reset</button><button class="btn" data-a="cancelreset">Cancel</button></span>` : `<button class="linkbtn" data-a="askreset">Reset my progress</button>`}</div></main></div>`;
+  window.scrollTo(0, y);
+}
+
+// ---------- events ----------
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-a]'); if (!b || b.tagName === 'TEXTAREA' || b.type === 'checkbox') return;
+  const a = b.dataset.a, i = +b.dataset.i, n = +b.dataset.n;
+  const d = () => deck();
+  switch (a) {
+    case 'lang': store.lang[b.dataset.l] = !store.lang[b.dataset.l]; save(); break;
+    case 'lesson': S.lesson = b.dataset.v === 'all' ? 'all' : +b.dataset.v; S.ci = 0; S.flipped = false; S.quiz = null; break;
+    case 'tab': S.tab = b.dataset.v; break;
+    case 'flip': S.flipped = !S.flipped; break;
+    case 'shuffle': S.shuffled = !S.shuffled; S.rank = {}; S.ci = 0; S.flipped = false; break;
+    case 'learning': S.onlyLearning = !S.onlyLearning; S.ci = 0; S.flipped = false; break;
+    case 'prev': S.ci = Math.max(0, S.ci - 1); S.flipped = false; break;
+    case 'next': S.ci = Math.min(d().length - 1, S.ci + 1); S.flipped = false; break;
+    case 'known': { const c = d()[S.ci]; store.cards[c.key] = 1; save(); if (!S.onlyLearning) S.ci = Math.min(d().length - 1, S.ci + 1); S.flipped = false; break; }
+    case 'learn': { const c = d()[S.ci]; delete store.cards[c.key]; save(); S.ci = Math.min(d().length - 1, S.ci + 1); S.flipped = false; break; }
+    case 'pick': { const Q = S.quiz, cur = Q.list[Q.i]; if (Q.picked !== null) return; Q.picked = +b.dataset.k;
+      if (Q.picked === cur.q.a) { Q.score++; store.quiz[cur.id] = 1; save(); } else Q.missed.push(cur.id); break; }
+    case 'qnext': { const Q = S.quiz; if (Q.i + 1 >= Q.list.length) Q.done = true; else { Q.i++; Q.picked = null; } break; }
+    case 'qrestart': startQuiz(); break;
+    case 'qmissed': startQuiz(S.quiz.missed.slice()); break;
+    case 'place': { const st = seqState(i); st.placed.push(n); st.checked = false; break; }
+    case 'unplace': { const st = seqState(i); st.placed = st.placed.filter(x => x !== n); st.checked = false; break; }
+    case 'checkseq': { const st = seqState(i); st.checked = true; if (st.placed.every((x, p) => x === p)) { store.seq[i] = 1; save(); } break; }
+    case 'resetseq': delete S.seq['seq' + i]; break;
+    case 'mleft': matchState(i).sel = n; matchState(i).flash = null; break;
+    case 'mright': { const st = matchState(i); if (st.sel === null) return; if (st.sel === n) { st.done.push(n); st.sel = null; st.flash = null; if (st.done.length === MATCHES[i].pairs.length) { store.match[i] = 1; save(); } } else { st.wrong++; st.flash = n; } break; }
+    case 'resetmatch': delete S.match['m' + i]; break;
+    case 'show': S.exam[i].open = true; break;
+    case 'hide': S.exam[i].open = false; break;
+    case 'askreset': S.confirmReset = true; break;
+    case 'cancelreset': S.confirmReset = false; break;
+    case 'reset': store.cards = {}; store.quiz = {}; store.seq = {}; store.match = {}; save(); S.confirmReset = false; S.seq = {}; S.match = {}; S.exam = {}; S.quiz = null; S.ci = 0; break;
+    default: return;
+  }
+  render();
+});
+document.addEventListener('change', ev => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.a === 'tick') { S.exam[+t.dataset.i].ticks[+t.dataset.n] = t.checked; render(); }
+});
+document.addEventListener('input', ev => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.a === 'text') S.exam[+t.dataset.i].text = t.value;
+});
+render();
+</script></body></html>
